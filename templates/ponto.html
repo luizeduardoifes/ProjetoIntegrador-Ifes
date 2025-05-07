@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batimento de Ponto</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #eef2f3;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background: white;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Batimento de Ponto</h2>
+        <input type="text" id="nome" placeholder="Digite seu nome">
+        <select id="tipoEntrada">
+            <option value="entrada">Horário de Entrada</option>
+            <option value="entrada_intervalo">Entrada Intervalo</option>
+            <option value="saida_intervalo">Saída Intervalo</option>
+            <option value="saida">Horário de Saída</option>
+        </select>
+        <button onclick="registrarPonto()">Registrar Ponto</button>
+        <button onclick="limparTabela()">Limpar Registros</button>
+        <button onclick="gerarRelatorioPDF()">Gerar Relatório de Dias Remidos (PDF)</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Horário de Entrada</th>
+                    <th>Entrada Intervalo</th>
+                    <th>Saída Intervalo</th>
+                    <th>Horário de Saída</th>
+                </tr>
+            </thead>
+            <tbody id="tabelaPonto">
+                <!-- Registros aparecerão aqui -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function registrarPonto() {
+            let nome = document.getElementById("nome").value;
+            let tipoEntrada = document.getElementById("tipoEntrada").value;
+            let tabela = document.getElementById("tabelaPonto");
+            let horarioAtual = new Date().toLocaleTimeString();
+            
+            if (nome.trim() === "") {
+                alert("Erro: Por favor, digite um nome.");
+                return;
+            }
+            
+            let linhas = tabela.getElementsByTagName("tr");
+            let linhaExistente = null;
+            
+            for (let i = 0; i < linhas.length; i++) {
+                let colunas = linhas[i].getElementsByTagName("td");
+                if (colunas.length > 0 && colunas[0].innerText === nome) {
+                    linhaExistente = linhas[i];
+                    break;
+                }
+            }
+            
+            if (linhaExistente) {
+                let colunas = linhaExistente.getElementsByTagName("td");
+                switch (tipoEntrada) {
+                    case "entrada": colunas[1].innerText = horarioAtual; break;
+                    case "entrada_intervalo": colunas[2].innerText = horarioAtual; break;
+                    case "saida_intervalo": colunas[3].innerText = horarioAtual; break;
+                    case "saida": colunas[4].innerText = horarioAtual; break;
+                }
+            } else {
+                let linha = document.createElement("tr");
+                linha.innerHTML = `
+                    <td>${nome}</td>
+                    <td>${tipoEntrada === "entrada" ? horarioAtual : "-"}</td>
+                    <td>${tipoEntrada === "entrada_intervalo" ? horarioAtual : "-"}</td>
+                    <td>${tipoEntrada === "saida_intervalo" ? horarioAtual : "-"}</td>
+                    <td>${tipoEntrada === "saida" ? horarioAtual : "-"}</td>
+                `;
+                tabela.appendChild(linha);
+            }
+            
+            document.getElementById("nome").value = "";
+        }
+
+        function limparTabela() {
+            document.getElementById("tabelaPonto").innerHTML = "";
+        }
+
+        function gerarRelatorioPDF() {
+            const { jsPDF } = window.jspdf;
+            let doc = new jsPDF();
+            doc.text("Relatório de Dias Remidos", 10, 10);
+            
+            let tabela = document.getElementById("tabelaPonto");
+            let linhas = tabela.getElementsByTagName("tr");
+            let y = 20;
+            
+            doc.text("Nome | Dias Remidos", 10, y);
+            y += 10;
+            
+            for (let i = 0; i < linhas.length; i++) {
+                let colunas = linhas[i].getElementsByTagName("td");
+                let nome = colunas[0].innerText;
+                let diasRemidos = Math.floor(Math.random() * 10) + 1; // Simulação de cálculo
+                doc.text(`${nome} | ${diasRemidos} dias`, 10, y);
+                y += 10;
+            }
+
+            doc.save("relatorio_dias_remidos.pdf");
+        }
+    </script>
+</body>
+</html>
