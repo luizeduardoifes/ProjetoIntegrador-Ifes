@@ -1,14 +1,21 @@
+from fastapi.staticfiles import StaticFiles
 import uvicorn
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
+
+async def create_item(name: str = Form(...), description: str = Form(...), price: float = Form(...)):
+    if not name or not description or not price:
+        raise HTTPException(status_code=400, detail="Todos os campos são obrigatórios!")
+    return {"message": "Item criado com sucesso!"}
 
 @app.get("/inicial", response_class=HTMLResponse)
 async def login(request: Request):
