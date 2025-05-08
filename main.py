@@ -12,6 +12,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def home(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
+
 async def create_item(name: str = Form(...), description: str = Form(...), price: float = Form(...)):
     if not name or not description or not price:
         raise HTTPException(status_code=400, detail="Todos os campos são obrigatórios!")
@@ -24,6 +25,10 @@ async def login(request: Request):
 @app.get("/ponto", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse("ponto.html", {"request": request})
+
+@app.get("/cadastro", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("cadastro.html", {"request": request})
 
 
 if __name__ == "__main__":

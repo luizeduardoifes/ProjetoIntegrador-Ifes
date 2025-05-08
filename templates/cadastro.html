@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7D4pr2IK8iDkDz7tuuOy0zYd2Bx1KjAyMa" crossorigin="anonymous">
+    <title>Cadastro do Sistema Carcerário</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 400px;
+            margin: auto;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background-image: url('/static/apac.png');
+            background-size: 120% 120%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cadastro do Sistema Carcerário</h1>
+    <form action="/submit" method="POST">
+        <label for="prisioneiro">Prisioneiro:</label>
+        <input type="text" id="prisioneiro" name="prisioneiro" required>
+
+        <label for="idade">Idade:</label>
+        <input type="number" id="idade" name="idade" required>
+
+        <label for="crime">Crime:</label>
+        <input type="text" id="crime" name="crime" required>
+
+        <label for="tempo_sentenca">Tempo de Sentença (em anos):</label>
+        <input type="number" id="tempo_sentenca" name="tempo_sentenca" required>
+
+        <label for="cela">Cela:</label>
+        <input type="text" id="cela" name="cela" required>
+
+        <label for="comportamento">Comportamento:</label>
+        <textarea id="comportamento" name="comportamento" rows="4" required></textarea>
+
+        <button type="submit">Cadastrar</button>
+    </form>
+</body>
+</html>
