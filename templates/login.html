@@ -68,11 +68,16 @@
 <body>
     <div class="login-container">
         <h2>APAC-Feminino</h2>
-        <input type="text" placeholder="Usuário" required>
-        <input type="password" placeholder="Senha" required>
-        <a href="/inicial">
-            <button>Entrar</button>
-        </a>
+        <form method="POST" action="/login">
+            <label for="username">Usuário:</label>
+            <input type="text" id="username" name="username" required minlength="3" maxlength="20">
+          
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required minlength="6">
+          
+            <button type="submit">Entrar</button>
+          </form>
+          
     </div>
 </body>
 
