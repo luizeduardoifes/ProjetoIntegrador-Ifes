@@ -10,13 +10,23 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+    return templates.TemplateResponse("entrar.html", {"request": request})
+
+@app.post("/login", response_class=HTMLResponse)
+def processar_login(request: Request, username: str = Form(...), password: str = Form(...)):
+    if username == "admin" and password == "123456":
+        mensagem = "Login bem-sucedido!"
+    else:
+        mensagem = "Login inválido."
+
+    return templates.TemplateResponse("login.html", {
+        "request": request,
+        "mensagem": mensagem,
+        "username": username
+    })
 
 
-async def create_item(name: str = Form(...), description: str = Form(...), price: float = Form(...)):
-    if not name or not description or not price:
-        raise HTTPException(status_code=400, detail="Todos os campos são obrigatórios!")
-    return {"message": "Item criado com sucesso!"}
+
 
 @app.get("/inicial", response_class=HTMLResponse)
 async def login(request: Request):
