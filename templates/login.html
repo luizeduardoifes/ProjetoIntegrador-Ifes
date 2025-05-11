@@ -68,19 +68,18 @@
 </head>
 
 <body>
+
+    {% if error %}
+    <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
     <div class="login-container justify-content-center">
         <h2>APAC-Feminino</h2>
-        <form method="POST" action="/formulario">
-            <input type="text" name="username" placeholder="Usuário" required>
-            <input type="password" name="password" placeholder="Senha" required>
+        <form method="post" action="/login">
+            <input type="text" name="usuario" placeholder="Usuário" required>
+            <input type="password" name="senha" placeholder="Senha" required>
             <button type="submit">Entrar</button>
         </form>
-
-        {% if mensagem %}
-        <p>{{ mensagem }}</p>
-        {% endif %}
-
-
 
     </div>
 </body>
