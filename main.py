@@ -1,3 +1,4 @@
+import sqlite3
 from fastapi.staticfiles import StaticFiles
 from fastapi import Depends, FastAPI, Form, Request
 from fastapi.templating import Jinja2Templates
@@ -5,41 +6,31 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from encarregado_repo import criar_tabela
 
-from models import Encarregado
-from databaseEncarregado import get_db
+
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+def verificar_login(usuario: str, senha: str) -> bool:
+    conn = sqlite3.connect("dados.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM usuarios WHERE username = ? AND senha = ?", (usuario, senha))
+    usuario = cursor.fetchone()
+    conn.close()
+    return usuario is not None
+
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    return templates.TemplateResponse("entrar.html", {"request": request})
+    tabela = criar_tabela()
+    return templates.TemplateResponse("entrar.html", {"request": request, "tabela": tabela})
 
 @app.get("/login", response_class=HTMLResponse)
 def read_login(request: Request):
-    tabela = criar_tabela()
-    return templates.TemplateResponse("login.html", {"request": request, "tabela": tabela})
+   
+    return templates.TemplateResponse("login.html", {"request": request})
 
-@app.post("/login", response_class=HTMLResponse)
-def login(
-    request: Request,
-    usuario: str = Form(...),
-    senha: str = Form(...),
-    db: Session = Depends(get_db)
-):
-    user = db.query(Encarregado).filter(
-        Encarregado.usuario == usuario,
-        Encarregado.senha == senha
-    ).first()
 
-    if user:
-        return templates.TemplateResponse("inicial.html", {"request": request})
-    else:
-        return templates.TemplateResponse("login.html", {
-            "request": request,
-            "error": "Usuário ou senha inválidos."
-        })
 
 @app.get("/inicial", response_class=HTMLResponse)
 async def inicial(request: Request):
