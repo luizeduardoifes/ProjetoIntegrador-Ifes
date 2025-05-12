@@ -75,13 +75,43 @@
 
     <div class="login-container justify-content-center">
         <h2>APAC-Feminino</h2>
-        <form method="post" action="/login">
-            <input type="text" name="usuario" placeholder="Usuário" required>
-            <input type="password" name="senha" placeholder="Senha" required>
+        <form id="loginForm"></form>
+            <input type="text" id="usuario" name="usuario" placeholder="Usuário" required>
+            <input type="password" id="senha" name="senha" placeholder="Senha" required>
             <button type="submit">Entrar</button>
         </form>
-
     </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Impede o envio do formulário
+
+            const usuario = document.getElementById('usuario').value;
+            const senha = document.getElementById('senha').value;
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ usuario, senha }),
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Login bem-sucedido!');
+                    window.location.href = '/dashboard';
+                } else {
+                    alert('Usuário ou senha incorretos!');
+                }
+            } catch (error) {
+                console.error('Erro ao realizar login:', error);
+                alert('Ocorreu um erro. Tente novamente mais tarde.');
+            }
+        });
+    </script>
+    
 </body>
 
 </html>
