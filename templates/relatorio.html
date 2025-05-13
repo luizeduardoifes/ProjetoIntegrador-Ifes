@@ -4,17 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro do Sistema Carcerário</title>
+    <title>Controle de Ponto - Arquivos PDF</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
         body {
             background-image: url('/static/apac.png');
             background-size: 120% 120%;
             background-position: center;
             background-repeat: no-repeat;
-            padding-top: 80px;
-            /* espaço para navbar */
+            padding-top: 70px;
+            /* Garante espaço para navbar fixa */
         }
 
         .navbar {
@@ -40,13 +59,33 @@
             font-weight: bold;
         }
 
-        .form-container {
+        .main-container {
+            margin-top: 100px;
+            padding: 20px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
             background-color: white;
-            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            max-width: 500px;
-            margin: auto;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .pdf-list {
+            margin-top: 20px;
+        }
+
+        .pdf-list a {
+            display: block;
+            margin-bottom: 10px;
+            color: #0056b3;
+        }
+
+        .btn-primary {
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -56,7 +95,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#"> Cadastro de Prisioneiros</a>
+            <a class="navbar-brand" href="#">Geração de Relatórios</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Alternar navegação">
                 <span class="navbar-toggler-icon"></span>
@@ -67,48 +106,35 @@
                         <a class="nav-link active" href="/ponto">Início</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Geração de Relatórios</a>
+                        <a class="nav-link" href="#">Controle de Ponto </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/cadastro">Batimento de Ponto</a>
+                        <a class="nav-link" href="/cadastro">Cadastro de Prisioneiros</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Formulário -->
-    <div class="container mt-5">
-        <div class="form-container">
-            <h2 class="text-center mb-4">Cadastro do Sistema Carcerário</h2>
-            <form action="/submit" method="POST">
-                <div class="mb-3">
-                    <label for="prisioneiro" class="form-label">Prisioneiro</label>
-                    <input type="text" class="form-control" id="prisioneiro" name="prisioneiro" required>
-                </div>
-                <div class="mb-3">
-                    <label for="idade" class="form-label">Idade</label>
-                    <input type="date" class="form-control" id="nascimento" name="nascimento" required>
+    <!-- Upload Container -->
+    <div class="main-container">
+        <h2 class="text-center mb-4">Consultas de Relatórios</h2>
+        <form id="uploadForm" enctype="multipart/form-data" method="POST" action="/upload">
+            <div class="mb-3">
+                <label for="pdfFile" class="form-label">Selecionar Arquivo PDF:</label>
+                <input class="form-control" type="file" id="pdfFile" name="pdfFile" accept="application/pdf" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Enviar Arquivo</button>
+        </form>
 
-                </div>
-                <div class="mb-3">
-                    <label for="crime" class="form-label">Crime</label>
-                    <input type="text" class="form-control" id="crime" name="crime" required>
-                </div>
-                <div class="mb-3">
-                    <label for="tempo_sentenca" class="form-label">Tempo de Sentença (em anos)</label>
-                    <input type="number" class="form-control" id="tempo_sentenca" name="tempo_sentenca" required>
-                </div>
-                <div class="mb-3">
-                    <label for="cela" class="form-label">Cela</label>
-                    <input type="text" class="form-control" id="cela" name="cela" required>
-                </div>
-                <div class="mb-3">
-                    <label for="comportamento" class="form-label">Comportamento</label>
-                    <textarea class="form-control" id="comportamento" name="comportamento" rows="4" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-success w-100">Cadastrar</button>
-            </form>
+        <!-- Lista de PDFs -->
+        <div class="pdf-list mt-5">
+            <h5>Arquivos Enviados:</h5>
+            <div id="pdfLinks">
+                <!-- Exemplo estático (em produção isso viria do back-end) -->
+                <a href="/uploads/ponto_abril.pdf" target="_blank">ponto_abril.pdf</a>
+                <a href="/uploads/ponto_maio.pdf" target="_blank">ponto_maio.pdf</a>
+            </div>
         </div>
     </div>
 

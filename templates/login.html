@@ -69,20 +69,20 @@
 
 <body>
 
-    {% if error %}
-    <p style="color: red;">{{ error }}</p>
-    {% endif %}
+
 
     <div class="login-container justify-content-center">
         <h2>APAC-Feminino</h2>
         <form id="loginForm"></form>
-            <input type="text" id="usuario" name="usuario" placeholder="Usuário" required>
-            <input type="password" id="senha" name="senha" placeholder="Senha" required>
+        <input type="text" id="usuario" name="usuario" placeholder="Usuário" required>
+        <input type="password" id="senha" name="senha" placeholder="Senha" required>
+        <a href="/inicial">
             <button type="submit">Entrar</button>
+        </a>
         </form>
     </div>
     <script>
-        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        document.getElementById('loginForm').addEventListener('submit', async function (event) {
             event.preventDefault(); // Impede o envio do formulário
 
             const usuario = document.getElementById('usuario').value;
@@ -111,7 +111,7 @@
             }
         });
     </script>
-    
+
 </body>
 
 </html>

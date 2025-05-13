@@ -44,6 +44,10 @@ async def ponto(request: Request):
 async def cadastro(request: Request):
     return templates.TemplateResponse("cadastro.html", {"request": request})
 
+@app.get("/relatorio", response_class=HTMLResponse)
+async def relatorio(request: Request):
+    return templates.TemplateResponse("relatorio.html", {"request": request})
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app="main:app", host="127.0.0.1", port=8000, reload=True)
