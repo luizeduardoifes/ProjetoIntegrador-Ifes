@@ -1,6 +1,6 @@
-from database import obter_conexao
-from sql import *
-from prisioneiro import Remetente
+from data.database import obter_conexao
+from sql.remetente_sql import *
+from models.prisioneiro import Remetente
 
 def criar_tabela():
     """Cria a tabela Remententes se ela não existir."""

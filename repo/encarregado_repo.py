@@ -1,6 +1,6 @@
-from database import obter_conexao
-from encarregado_sql import *
-from encarregado import Encarregado
+from data.database import obter_conexao
+from sql.encarregado_sql import *
+from models.encarregado import Encarregado
 
 
 def criar_tabela():

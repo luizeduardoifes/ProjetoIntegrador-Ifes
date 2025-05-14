@@ -4,7 +4,7 @@ from fastapi import Depends, FastAPI, Form, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
-from encarregado_repo import criar_tabela
+from repo.encarregado_repo import criar_tabela
 
 
 
