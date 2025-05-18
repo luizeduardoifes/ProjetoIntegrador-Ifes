@@ -77,49 +77,22 @@
 
     <div class="login-container">
         <h2>APAC-Feminino</h2>
+
+        {% if erro %}
+        <div class="alert alert-danger" role="alert">
+            {{ erro }}
+        </div>
+        {% endif %}
+
         <form action="/form" method="post">
             <input type="text" name="usuario" id="usuario" placeholder="Usuário" required>
             <input type="password" name="senha" id="senha" placeholder="Senha" required>
             <button type="submit">Entrar</button>
         </form>
-        <div class="message" id="mensagem"></div>
+
     </div>
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async function (event) {
-            event.preventDefault();
 
-            const usuario = document.getElementById('usuario').value;
-            const senha = document.getElementById('senha').value;
-
-            try {
-                const response = await fetch('http://127.0.0.1:8000/inicial', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ usuario, senha })
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    document.getElementById('mensagem').style.color = 'green';
-                    document.getElementById('mensagem').textContent = 'Login bem-sucedido!';
-
-                    // Redireciona para outro site ou página interna
-                    window.location.href = '/login';  // coloque aqui o destino real
-                } else {
-                    document.getElementById('mensagem').style.color = 'red';
-                    document.getElementById('mensagem').textContent = result.message || 'Erro no login.';
-                }
-
-            } catch (error) {
-                document.getElementById('mensagem').textContent = 'Erro de conexão com o servidor.';
-                console.error('Erro ao fazer login:', error);
-            }
-        });
-    </script>
 
 </body>
 

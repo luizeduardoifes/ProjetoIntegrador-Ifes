@@ -132,6 +132,76 @@
             height: 100%;
         }
     </style>
+    <script>
+        function registrarPonto() {
+            let nome = document.getElementById("nome").value;
+            let tipoEntrada = document.getElementById("tipoEntrada").value;
+            let tabela = document.getElementById("tabelaPonto");
+            let horarioAtual = new Date().toLocaleTimeString();
+
+            if (nome.trim() === "") {
+                alert("Erro: Por favor, digite um nome.");
+                return;
+            }
+
+            let linhas = tabela.getElementsByTagName("tr");
+            let linhaExistente = null;
+
+            for (let i = 0; i < linhas.length; i++) {
+                let colunas = linhas[i].getElementsByTagName("td");
+                if (colunas.length > 0 && colunas[0].innerText === nome) {
+                    linhaExistente = linhas[i];
+                    break;
+                }
+            }
+
+            // Ordem correta dos batimentos
+            const ordem = ["entrada", "entrada_intervalo", "saida_intervalo", "saida"];
+            let colunasOrdem = [1, 2, 3, 4];
+
+            if (linhaExistente) {
+                let colunas = linhaExistente.getElementsByTagName("td");
+                // Descobrir qual foi o último batimento feito
+                let ultimoBatido = -1;
+                for (let i = 1; i <= 4; i++) {
+                    if (colunas[i].innerText !== "-" && colunas[i].innerText !== "") {
+                        ultimoBatido = i - 1;
+                    } else {
+                        break;
+                    }
+                }
+                let proximoEsperado = ultimoBatido + 1;
+                let tipoIndex = ordem.indexOf(tipoEntrada);
+                if (tipoIndex !== proximoEsperado) {
+                    alert("Por favor, siga a ordem correta de batimento de ponto: Entrada, Entrada Intervalo, Saída Intervalo e Saída.");
+                    return;
+                }
+                switch (tipoEntrada) {
+                    case "entrada": colunas[1].innerText = horarioAtual; break;
+                    case "entrada_intervalo": colunas[2].innerText = horarioAtual; break;
+                    case "saida_intervalo": colunas[3].innerText = horarioAtual; break;
+                    case "saida": colunas[4].innerText = horarioAtual; break;
+                }
+            } else {
+                // Só pode registrar "entrada" se não existir linha
+                if (tipoEntrada !== "entrada") {
+                    alert("O primeiro batimento deve ser 'Horário de Entrada'.");
+                    return;
+                }
+                let linha = document.createElement("tr");
+                linha.innerHTML = `
+                    <td>${nome}</td>
+                    <td>${horarioAtual}</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                `;
+                tabela.appendChild(linha);
+            }
+
+            document.getElementById("nome").value = "";
+        }
+    </script>
 </head>
 
 <body>

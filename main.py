@@ -2,7 +2,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi import Depends, FastAPI, Form, HTTPException, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
-from models import get_db
+from models.get_db import get_db
 from models.base import Usuario
 from repo.encarregado_repo import criar_tabela
 from fastapi import FastAPI, Depends
@@ -26,8 +26,9 @@ def read_login(request: Request):
 async def create_form(request: Request,db: Session = Depends(get_db) ,usuario: str = Form(...), senha: str = Form(...)):
     remetente = db.query(Usuario).filter(Usuario.usuario == usuario, Usuario.senha == senha).first()
     if not remetente:
-        raise HTTPException(status_code=400, detail="Usuário ou senha inválidos")
-    return templates.TemplateResponse("inicial.html", {"request": request})   
+        return templates.TemplateResponse("login.html", {"request": request, "erro": "Usuario ou senha incorretos"})
+    else:
+        return templates.TemplateResponse("inicial.html", {"request": request})   
      
 @app.get("/inicial", response_class=HTMLResponse)
 async def inicial(request: Request):
