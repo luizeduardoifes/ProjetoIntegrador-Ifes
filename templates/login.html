@@ -64,11 +64,9 @@
         button:hover {
             background-color: #0056b3;
         }
-
-        .message {
+        .alert {
+            margin-top: 10px;
             text-align: center;
-            margin-top: 15px;
-            color: red;
         }
     </style>
 </head>
@@ -84,7 +82,7 @@
         </div>
         {% endif %}
 
-        <form action="/form" method="post">
+        <form action="/formlogin" method="post">
             <input type="text" name="usuario" id="usuario" placeholder="Usuário" required>
             <input type="password" name="senha" id="senha" placeholder="Senha" required>
             <button type="submit">Entrar</button>

@@ -2,7 +2,7 @@ from data.database import obter_conexao
 from sql.remetente_sql import *
 from models.prisioneiro import Remetente
 
-def criar_tabela():
+def criar_tabela_remetente():
     """Cria a tabela Remententes se ela não existir."""
     conexao = obter_conexao()
     cursor = conexao.cursor()
@@ -10,12 +10,12 @@ def criar_tabela():
     conexao.commit()
     conexao.close()
 
-def inserir_produto(remetente: Remetente) -> Remetente:
+def inserir_prisioneiro(remetente: Remetente) -> Remetente:
     """Insere um novo rementente no banco de dados."""
     conexao = obter_conexao()
     cursor = conexao.cursor()
     cursor.execute(INSERT_REMETENTES, 
-        (remetente.prisioneiro, remetente.idade, remetente.crime, remetente.tempo_sentenca, remetente.cela, remetente.comportamento))
+        (remetente.prisioneiro, remetente.data_nascimento, remetente.crime, remetente.tempo_sentenca, remetente.cela, remetente.comportamento))
     remetente.id = cursor.lastrowid
     conexao.commit()
     conexao.close()
@@ -51,7 +51,7 @@ def obter_produto_por_id(id: int) -> Remetente:
         return Remetente(
             id=resultado[0],
             prisioneiro=resultado[1],
-            idade=resultado[2],
+            data_nascimento=resultado[2],
             crime=resultado[3],
             tempo_sentenca=resultado[4],
             cela=resultado[5],
@@ -70,7 +70,7 @@ def obter_produtos_por_pagina(limite: int, offset: int) -> list[Remetente]:
     return [Remetente(
         id=resultado[0],
         prisioneiro=resultado[1],   
-        idade=resultado[2],
+        data_nascimento=resultado[2],
         crime=resultado[3],
         tempo_sentenca=resultado[4],
         cela=resultado[5],

@@ -81,14 +81,29 @@
     <div class="container mt-5">
         <div class="form-container">
             <h2 class="text-center mb-4">Cadastro do Sistema Carcerário</h2>
-            <form action="/submit" method="POST">
+
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            {% if successo %}
+            <div class="alert alert-success" role="alert">
+                {{ successo }}
+            </div>
+            {% endif %}
+
+
+
+            <form action="/formcadastro" method="post">
                 <div class="mb-3">
-                    <label for="prisioneiro" class="form-label">Prisioneiro</label>
-                    <input type="text" class="form-control" id="prisioneiro" name="prisioneiro" required>
+                    <label for="prisioneiro"  class="form-label">Prisioneiro</label>
+                    <input type="text" name="prisioneiro" class="form-control" id="prisioneiro" name="prisioneiro" required>
                 </div>
                 <div class="mb-3">
-                    <label for="idade" class="form-label">Idade</label>
-                    <input type="date" class="form-control" id="nascimento" name="nascimento" required>
+                    <label for="idade" class="form-label">Data de Nascimento</label>
+                    <input type="date"  class="form-control" id="nascimento" name="data_nascimento" required>
 
                 </div>
                 <div class="mb-3">

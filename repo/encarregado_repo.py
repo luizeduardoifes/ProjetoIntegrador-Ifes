@@ -3,7 +3,7 @@ from sql.encarregado_sql import *
 from models.encarregado import Encarregado
 
 
-def criar_tabela():
+def criar_tabela_encarregado():
     """Cria a tabela Remententes se ela não existir."""
     conexao = obter_conexao()
     cursor = conexao.cursor()
