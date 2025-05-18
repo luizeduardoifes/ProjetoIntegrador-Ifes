@@ -2,8 +2,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi import Depends, FastAPI, Form, HTTPException, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+from models import get_db
 from models.base import Usuario
-from models.conectar_sql import SessionLocal
 from repo.encarregado_repo import criar_tabela
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
@@ -11,16 +11,6 @@ from sqlalchemy.orm import Session
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
-
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
@@ -39,10 +29,6 @@ async def create_form(request: Request,db: Session = Depends(get_db) ,usuario: s
         raise HTTPException(status_code=400, detail="Usuário ou senha inválidos")
     return templates.TemplateResponse("inicial.html", {"request": request})   
      
-
-
-
-
 @app.get("/inicial", response_class=HTMLResponse)
 async def inicial(request: Request):
     return templates.TemplateResponse("inicial.html", {"request": request})
