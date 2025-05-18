@@ -1,5 +1,5 @@
 from fastapi.staticfiles import StaticFiles
-from fastapi import Depends, FastAPI, Form, HTTPException, Request
+from fastapi import Depends, FastAPI, Form, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from models.get_db import get_db
