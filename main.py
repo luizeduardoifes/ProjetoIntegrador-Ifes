@@ -4,12 +4,12 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from models.get_db import get_db
 from models.base import Usuario
-from models.prisioneiro import Remetente
+from models.remetente import Remetente
 from repo.encarregado_repo import criar_tabela_encarregado
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
-import repo.prisioneiro_repo
-from datetime import datetime, date
+import repo.remetente_repo
+from datetime import datetime
 
 
 app = FastAPI()
@@ -19,7 +19,8 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     tabela = criar_tabela_encarregado()
-    return templates.TemplateResponse("entrar.html", {"request": request, "tabela": tabela})
+    tabela_remetente = repo.remetente_repo.criar_tabela_remetente()
+    return templates.TemplateResponse("entrar.html", {"request": request, "tabela": tabela, "tabela_remetente": tabela_remetente})
 
 @app.get("/login", response_class=HTMLResponse)
 def read_login(request: Request):
@@ -44,13 +45,13 @@ async def ponto(request: Request):
 
 @app.get("/cadastro", response_class=HTMLResponse)
 async def cadastro(request: Request):
-    tabela_prisioneiro = repo.prisioneiro_repo.criar_tabela_remetente()
-    return templates.TemplateResponse("cadastro.html", {"request": request, "tabela_prisioneiro": tabela_prisioneiro})
+    
+    return templates.TemplateResponse("cadastro.html", {"request": request})
 
-@app.post("/formcadastro")
+@app.post("/formcadastro", response_class=HTMLResponse)
 def cadastrar_remetente(
     request: Request,
-    prisioneiro: str = Form(...),
+    remetente: str = Form(...),
     data_nascimento: str = Form(...),
     crime: str = Form(...),
     tempo_sentenca: int = Form(...),
@@ -58,13 +59,13 @@ def cadastrar_remetente(
     comportamento: str = Form(...)
 ):
     try:
-        # Converte a string de data para datetime.date
+        # Converte a string para data no formato yyyy-mm-dd
         data_formatada = datetime.strptime(data_nascimento, "%Y-%m-%d").date()
 
-        # Cria o objeto Remetente (sem ID ainda)
+        # Cria o objeto remetente
         remetente = Remetente(
-            id=0,  # será preenchido dentro da função com lastrowid
-            prisioneiro=prisioneiro,
+            id=0,  # será atribuído após inserção
+            remetente=remetente,
             data_nascimento=data_formatada,
             crime=crime,
             tempo_sentenca=tempo_sentenca,
@@ -72,13 +73,20 @@ def cadastrar_remetente(
             comportamento=comportamento
         )
 
-        # Insere no banco
-        remetente = repo.prisioneiro_repo.inserir_prisioneiro(remetente)
+        # Insere no banco e recupera com ID
+        remetente = repo.remetente_repo.inserir_remetente(remetente)
 
-        return {"cadastro.html",{"request": request,"sucesso":"Remetente cadastrado com sucesso!", "id": remetente.id}}
+        # Retorna o template com confirmação
+        return templates.TemplateResponse("cadastro.html",{"request": request,"sucesso": "remetente cadastrado com sucesso!","remetente": remetente})
 
     except Exception as e:
-        return {"erro": str(e)}
+        return templates.TemplateResponse(
+            "cadastro.html",
+            {
+                "request": request,
+                "erro": f"Erro ao cadastrar: {str(e)}"
+            }
+        )
 
 @app.get("/relatorio", response_class=HTMLResponse)
 async def relatorio(request: Request):
