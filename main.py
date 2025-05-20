@@ -1,7 +1,7 @@
 from fastapi.staticfiles import StaticFiles
 from fastapi import Depends, FastAPI, Form, Request
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from models.get_db import get_db
 from models.base import Usuario
 from models.remetente import Remetente
@@ -10,6 +10,7 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 import repo.remetente_repo
 from datetime import datetime
+from starlette.status import HTTP_302_FOUND
 
 
 app = FastAPI()
@@ -91,6 +92,25 @@ def cadastrar_remetente(
 @app.get("/relatorio", response_class=HTMLResponse)
 async def relatorio(request: Request):
     return templates.TemplateResponse("relatorio.html", {"request": request})
+
+@app.get("/consulta", response_class=HTMLResponse)
+async def consulta(request: Request):
+    consultas = repo.remetente_repo.obter_remetentes_por_pagina(12, 0)
+    return templates.TemplateResponse("consulta.html", {"request": request, "consultas": consultas})
+
+@app.post("/acao/{id}")
+def acoes(request: Request, id: int, botao: str = Form(...)):
+    if botao == "editar":
+        # Lógica para redirecionar para tela de edição
+        print(f"Editar remetente com id {id}")
+        return RedirectResponse(url=f"/editar/{id}", status_code=HTTP_302_FOUND)
+
+    elif botao == "excluir":
+        excluir = repo.remetente_repo.excluir_remetente(id)
+        return templates.TemplateResponse("consulta.html", {"request": request, "excluir": excluir})
+        
+
+    return {"mensagem": "Ação desconhecida"}
 
 if __name__ == "__main__":
     import uvicorn

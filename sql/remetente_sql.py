@@ -42,6 +42,6 @@ WHERE id = ?;
 GET_REMETENTES_BY_PAGE = """
 SELECT id, remetente, data_nascimento, crime, tempo_sentenca, cela, comportamento
 FROM Remetentes
-ORDER BY nome ASC 
+ORDER BY remetente ASC 
 LIMIT ? OFFSET ?;
 """

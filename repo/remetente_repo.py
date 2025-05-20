@@ -21,7 +21,7 @@ def inserir_remetente(remetente: Remetente) -> Remetente:
     conexao.close()
     return remetente
 
-def atualizar_produto(rementente: Remetente) -> bool:
+def atualizar_remetente(rementente: Remetente) -> bool:
     """Atualiza um remetente existente no banco de dados."""
     conexao = obter_conexao()
     cursor = conexao.cursor()
@@ -31,7 +31,7 @@ def atualizar_produto(rementente: Remetente) -> bool:
     conexao.close()
     return (cursor.rowcount > 0)
 
-def excluir_produto(id: int) -> bool:
+def excluir_remetente(id: int) -> bool:
     """Exclui um rementente do banco de dados pelo ID."""
     conexao = obter_conexao()
     cursor = conexao.cursor()
@@ -40,7 +40,7 @@ def excluir_produto(id: int) -> bool:
     conexao.close()
     return (cursor.rowcount > 0)
 
-def obter_produto_por_id(id: int) -> Remetente:
+def obter_remetente_por_id(id: int) -> Remetente:
     """Obtém um rementente pelo ID."""
     conexao = obter_conexao()
     cursor = conexao.cursor()
@@ -60,11 +60,11 @@ def obter_produto_por_id(id: int) -> Remetente:
         )
     return None
 
-def obter_produtos_por_pagina(limite: int, offset: int) -> list[Remetente]:
+def obter_remetentes_por_pagina(limite: int, offset: int) -> list[Remetente]:
     """Obtém uma lista de remetentes com paginação."""
     conexao = obter_conexao()
     cursor = conexao.cursor()
-    cursor.execute(GET_REMETENTES_BY_ID, (limite, offset))
+    cursor.execute(GET_REMETENTES_BY_PAGE, (limite, offset))
     resultados = cursor.fetchall()
     conexao.close()
     return [Remetente(
