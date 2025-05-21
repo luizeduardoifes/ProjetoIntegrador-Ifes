@@ -7,6 +7,6 @@ class Remetente:
     remetente: str
     data_nascimento: date
     crime: str
-    tempo_sentenca: int
+    tempo_sentenca: str
     cela: str
     comportamento: str

@@ -96,24 +96,80 @@ async def relatorio(request: Request):
     return templates.TemplateResponse("relatorio.html", {"request": request})
 
 @app.get("/consulta", response_class=HTMLResponse)
-async def consulta(request: Request):
-    consultas = repo.remetente_repo.obter_remetentes_por_pagina(12, 0)
-    return templates.TemplateResponse("consulta.html", {"request": request, "consultas": consultas})
+async def consulta_get(request: Request):
+    consultas = repo.remetente_repo.listar_remetentes()
+    return templates.TemplateResponse("consulta.html", {
+        "request": request,
+        "consultas": consultas,
+        "modo_edicao": None
+    })
 
 @app.post("/acao/{id}")
-def acoes(request: Request, id: int, botao: str = Form(...)):
+async def acao_post(
+    request: Request,
+    id: int,
+    botao: str = Form(...),
+    remetente: str = Form(None),
+    data_nascimento: str = Form(None),
+    crime: str = Form(None),
+    tempo_sentenca: str = Form(None),
+    cela: str = Form(None),
+    comportamento: str = Form(None)
+):
     if botao == "editar":
-        # Lógica para redirecionar para tela de edição
-        print(f"Editar remetente com id {id}")
-        return RedirectResponse(url=f"/editar/{id}", status_code=HTTP_302_FOUND)
+        # Ativa modo de edição para este ID
+        consultas = repo.remetente_repo.listar_remetentes()
+        return templates.TemplateResponse("consulta.html", {
+            "request": request,
+            "consultas": consultas,
+            "modo_edicao": id
+        })
+
+    if botao == "salvar":
+        try:
+            # Converte a data
+            data_convertida = datetime.strptime(data_nascimento, "%Y-%m-%d").date()
+        except Exception as e:
+            return templates.TemplateResponse("consulta.html", {
+                "request": request,
+                "consultas": repo.remetente_repo.listar_remetentes(),
+                "modo_edicao": id,
+                "erro": f"Data inválida: {data_nascimento}"
+            })
+
+        # Monta objeto e atualiza no banco
+        remetente_obj = Remetente(
+            id=id,
+            remetente=remetente,
+            data_nascimento=data_convertida,
+            crime=crime,
+            tempo_sentenca=tempo_sentenca,
+            cela=cela,
+            comportamento=comportamento
+        )
+        consultas = repo.remetente_repo.listar_remetentes(remetente_obj)
+        return templates.TemplateResponse("consulta.html", {
+        "request": request,
+        "consultas": consultas,
+        "modo_edicao": None,
+        "sucesso": "Remetente atualizado com sucesso!"
+    })
 
     elif botao == "excluir":
-        excluir = repo.remetente_repo.excluir_remetente(id)
-        return templates.TemplateResponse("consulta.html", {"request": request, "excluir": excluir})
-        
+        repo.remetente_repo.excluir_remetente(id)
+        return templates.TemplateResponse("consulta.html", {
+            "request": request,
+            "consultas": repo.remetente_repo.listar_remetentes(),
+            "modo_edicao": None,
+            "sucesso": "Remetente excluído com sucesso!"
+        })
 
-    return {"mensagem": "Ação desconhecida"}
+    else:
+        return RedirectResponse("/consulta", status_code=303)
+
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app="main:app", host="127.0.0.1", port=8000, reload=True)
+    
+

@@ -21,12 +21,12 @@ def inserir_remetente(remetente: Remetente) -> Remetente:
     conexao.close()
     return remetente
 
-def atualizar_remetente(rementente: Remetente) -> bool:
-    """Atualiza um remetente existente no banco de dados."""
+def atualizar_remetente(self, remetente: Remetente) -> bool:
+    """Atualiza um rementente existente no banco de dados."""
     conexao = obter_conexao()
     cursor = conexao.cursor()
     cursor.execute(UPDATE_REMETENTES, 
-        ())
+        (remetente.remetente, remetente.data_nascimento, remetente.crime, remetente.tempo_sentenca, remetente.cela, remetente.comportamento, remetente.id))
     conexao.commit()
     conexao.close()
     return (cursor.rowcount > 0)
@@ -39,6 +39,23 @@ def excluir_remetente(id: int) -> bool:
     conexao.commit()
     conexao.close()
     return (cursor.rowcount > 0)
+
+def listar_remetentes() -> list[Remetente]:
+    """Lista todos os remetentes do banco de dados."""
+    conexao = obter_conexao()
+    cursor = conexao.cursor()
+    cursor.execute(GET_REMETENTES_BY_PAGE, (1000, 0))
+    resultados = cursor.fetchall()
+    conexao.close()
+    return [Remetente(
+        id=resultado[0],
+        remetente=resultado[1],   
+        data_nascimento=resultado[2],
+        crime=resultado[3],
+        tempo_sentenca=resultado[4],
+        cela=resultado[5],
+        comportamento=resultado[6]
+    ) for resultado in resultados]
 
 def obter_remetente_por_id(id: int) -> Remetente:
     """Obtém um rementente pelo ID."""

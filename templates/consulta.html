@@ -79,11 +79,33 @@
                         {% for consulta in consultas %}
                         <tr>
                             <form method="post" action="/acao/{{ consulta.id }}">
+                                {% if modo_edicao == consulta.id %}
+                                <!-- Linha em modo de edição -->
+                                <td>{{ consulta.id }}</td>
+                                <td><input type="text" name="remetente" value="{{ consulta.remetente }}"
+                                        class="form-control form-control-sm"></td>
+                                <td><input type="date" name="data_nascimento" value="{{ consulta.data_nascimento }}"
+                                        class="form-control form-control-sm"></td>
+                                <td><input type="text" name="crime" value="{{ consulta.crime }}"
+                                        class="form-control form-control-sm"></td>
+                                <td><input type="text" name="tempo_sentenca" value="{{ consulta.tempo_sentenca }}"
+                                        class="form-control form-control-sm"></td>
+                                <td><input type="text" name="cela" value="{{ consulta.cela }}"
+                                        class="form-control form-control-sm"></td>
+                                <td><input type="text" name="comportamento" value="{{ consulta.comportamento }}"
+                                        class="form-control form-control-sm"></td>
+                                <td class="acoes">
+                                    <button type="submit" name="botao" value="salvar"
+                                        class="btn btn-sm btn-success">Salvar</button>
+                                    <a href="/consulta" class="btn btn-sm btn-secondary">Cancelar</a>
+                                </td>
+                                {% else %}
+                                <!-- Linha normal -->
                                 <td>{{ consulta.id }}</td>
                                 <td>{{ consulta.remetente }}</td>
                                 <td>{{ consulta.data_nascimento }}</td>
                                 <td>{{ consulta.crime }}</td>
-                                <td>{{ consulta.tempo_setenca }}</td>
+                                <td>{{ consulta.tempo_sentenca }}</td>
                                 <td>{{ consulta.cela }}</td>
                                 <td>{{ consulta.comportamento }}</td>
                                 <td class="acoes">
@@ -92,10 +114,12 @@
                                     <button type="submit" name="botao" value="excluir"
                                         class="btn btn-sm btn-danger">Excluir</button>
                                 </td>
+                                {% endif %}
                             </form>
                         </tr>
                         {% endfor %}
                     </tbody>
+
                 </table>
             </div>
         </div>
