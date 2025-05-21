@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Batimento de Ponto</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         body {
@@ -43,7 +42,6 @@
             font-weight: bold;
         }
 
-
         .main-container {
             display: flex;
             justify-content: center;
@@ -51,7 +49,6 @@
             flex-direction: column;
             padding: 20px;
             margin-top: 100px;
-            /* Espaço para a navbar */
         }
 
         .container {
@@ -120,128 +117,52 @@
             background-color: #f2f2f2;
         }
 
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 999;
-        }
-
         html,
         body {
             height: 100%;
         }
     </style>
-    <script>
-        function registrarPonto() {
-            let nome = document.getElementById("nome").value;
-            let tipoEntrada = document.getElementById("tipoEntrada").value;
-            let tabela = document.getElementById("tabelaPonto");
-            let horarioAtual = new Date().toLocaleTimeString();
-
-            if (nome.trim() === "") {
-                alert("Erro: Por favor, digite um nome.");
-                return;
-            }
-
-            let linhas = tabela.getElementsByTagName("tr");
-            let linhaExistente = null;
-
-            for (let i = 0; i < linhas.length; i++) {
-                let colunas = linhas[i].getElementsByTagName("td");
-                if (colunas.length > 0 && colunas[0].innerText === nome) {
-                    linhaExistente = linhas[i];
-                    break;
-                }
-            }
-
-            // Ordem correta dos batimentos
-            const ordem = ["entrada", "entrada_intervalo", "saida_intervalo", "saida"];
-            let colunasOrdem = [1, 2, 3, 4];
-
-            if (linhaExistente) {
-                let colunas = linhaExistente.getElementsByTagName("td");
-                // Descobrir qual foi o último batimento feito
-                let ultimoBatido = -1;
-                for (let i = 1; i <= 4; i++) {
-                    if (colunas[i].innerText !== "-" && colunas[i].innerText !== "") {
-                        ultimoBatido = i - 1;
-                    } else {
-                        break;
-                    }
-                }
-                let proximoEsperado = ultimoBatido + 1;
-                let tipoIndex = ordem.indexOf(tipoEntrada);
-                if (tipoIndex !== proximoEsperado) {
-                    alert("Por favor, siga a ordem correta de batimento de ponto: Entrada, Entrada Intervalo, Saída Intervalo e Saída.");
-                    return;
-                }
-                switch (tipoEntrada) {
-                    case "entrada": colunas[1].innerText = horarioAtual; break;
-                    case "entrada_intervalo": colunas[2].innerText = horarioAtual; break;
-                    case "saida_intervalo": colunas[3].innerText = horarioAtual; break;
-                    case "saida": colunas[4].innerText = horarioAtual; break;
-                }
-            } else {
-                // Só pode registrar "entrada" se não existir linha
-                if (tipoEntrada !== "entrada") {
-                    alert("O primeiro batimento deve ser 'Horário de Entrada'.");
-                    return;
-                }
-                let linha = document.createElement("tr");
-                linha.innerHTML = `
-                    <td>${nome}</td>
-                    <td>${horarioAtual}</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                `;
-                tabela.appendChild(linha);
-            }
-
-            document.getElementById("nome").value = "";
-        }
-    </script>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#"> Batimento de Ponto</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Alternar navegação">
+            <a class="navbar-brand" href="#">Batimento de Ponto</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/inicial">Início</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/relatorio">Geração de Relatórios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/cadastro">Cadastro de Remetentes</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="/inicial">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/relatorio">Geração de Relatórios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/cadastro">Cadastro de Remetentes</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Conteúdo Principal -->
-    <div class="main-container ">
+    <div class="main-container">
         <div class="container">
             <h2>Batimento de Ponto</h2>
-            <input type="text" id="nome" placeholder="Digite seu nome">
+
+            <select id="remetenteSelect">
+                <option selected disabled>Selecione um remetente</option>
+                {% for consulta in consultas %}
+                    <option value="{{ consulta.remetente }}">{{ consulta.remetente }}</option>
+                {% endfor %}
+            </select>
+
             <select id="tipoEntrada">
                 <option value="entrada">Horário de Entrada</option>
                 <option value="entrada_intervalo">Entrada Intervalo</option>
                 <option value="saida_intervalo">Saída Intervalo</option>
                 <option value="saida">Horário de Saída</option>
             </select>
+
             <button onclick="registrarPonto()">Registrar Ponto</button>
             <button onclick="limparTabela()">Limpar Registros</button>
             <button onclick="gerarRelatorioPDF()">Gerar Relatório de Dias Remidos (PDF)</button>
+
             <table>
                 <thead>
                     <tr>
@@ -262,13 +183,13 @@
     <!-- Scripts -->
     <script>
         function registrarPonto() {
-            let nome = document.getElementById("nome").value;
+            let nome = document.getElementById("remetenteSelect").value;
             let tipoEntrada = document.getElementById("tipoEntrada").value;
             let tabela = document.getElementById("tabelaPonto");
             let horarioAtual = new Date().toLocaleTimeString();
 
-            if (nome.trim() === "") {
-                alert("Erro: Por favor, digite um nome.");
+            if (!nome || nome.trim() === "") {
+                alert("Erro: Por favor, selecione um nome.");
                 return;
             }
 
@@ -283,8 +204,24 @@
                 }
             }
 
+            const ordem = ["entrada", "entrada_intervalo", "saida_intervalo", "saida"];
+
             if (linhaExistente) {
                 let colunas = linhaExistente.getElementsByTagName("td");
+                let ultimoBatido = -1;
+                for (let i = 1; i <= 4; i++) {
+                    if (colunas[i].innerText !== "-" && colunas[i].innerText !== "") {
+                        ultimoBatido = i - 1;
+                    } else {
+                        break;
+                    }
+                }
+                let proximoEsperado = ultimoBatido + 1;
+                let tipoIndex = ordem.indexOf(tipoEntrada);
+                if (tipoIndex !== proximoEsperado) {
+                    alert("Por favor, siga a ordem correta de batimento de ponto.");
+                    return;
+                }
                 switch (tipoEntrada) {
                     case "entrada": colunas[1].innerText = horarioAtual; break;
                     case "entrada_intervalo": colunas[2].innerText = horarioAtual; break;
@@ -292,18 +229,22 @@
                     case "saida": colunas[4].innerText = horarioAtual; break;
                 }
             } else {
+                if (tipoEntrada !== "entrada") {
+                    alert("O primeiro batimento deve ser 'Horário de Entrada'.");
+                    return;
+                }
                 let linha = document.createElement("tr");
                 linha.innerHTML = `
                     <td>${nome}</td>
-                    <td>${tipoEntrada === "entrada" ? horarioAtual : "-"}</td>
-                    <td>${tipoEntrada === "entrada_intervalo" ? horarioAtual : "-"}</td>
-                    <td>${tipoEntrada === "saida_intervalo" ? horarioAtual : "-"}</td>
-                    <td>${tipoEntrada === "saida" ? horarioAtual : "-"}</td>
+                    <td>${horarioAtual}</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
                 `;
                 tabela.appendChild(linha);
             }
 
-            document.getElementById("nome").value = "";
+            document.getElementById("remetenteSelect").selectedIndex = 0;
         }
 
         function limparTabela() {
@@ -325,7 +266,7 @@
             for (let i = 0; i < linhas.length; i++) {
                 let colunas = linhas[i].getElementsByTagName("td");
                 let nome = colunas[0].innerText;
-                let diasRemidos = Math.floor(Math.random() * 10) + 1; // Simulação de cálculo
+                let diasRemidos = Math.floor(Math.random() * 10) + 1;
                 doc.text(`${nome} | ${diasRemidos} dias`, 10, y);
                 y += 10;
             }
@@ -333,9 +274,8 @@
             doc.save("relatorio_dias_remidos.pdf");
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
-        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

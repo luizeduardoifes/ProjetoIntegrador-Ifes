@@ -42,7 +42,9 @@ async def inicial(request: Request):
 
 @app.get("/ponto", response_class=HTMLResponse)
 async def ponto(request: Request):
-    return templates.TemplateResponse("ponto.html", {"request": request})
+    consultas = repo.remetente_repo.obter_remetentes_por_pagina(12, 0)
+    return templates.TemplateResponse("ponto.html", {"request": request, "consultas": consultas})
+
 
 @app.get("/cadastro", response_class=HTMLResponse)
 async def cadastro(request: Request):
