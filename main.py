@@ -104,68 +104,18 @@ async def consulta_get(request: Request):
         "modo_edicao": None
     })
 
-@app.post("/acao/{id}")
-async def acao_post(
-    request: Request,
-    id: int,
-    botao: str = Form(...),
-    remetente: str = Form(None),
-    data_nascimento: str = Form(None),
-    crime: str = Form(None),
-    tempo_sentenca: str = Form(None),
-    cela: str = Form(None),
-    comportamento: str = Form(None)
-):
-    if botao == "editar":
-        # Ativa modo de edição para este ID
-        consultas = repo.remetente_repo.listar_remetentes()
-        return templates.TemplateResponse("consulta.html", {
-            "request": request,
-            "consultas": consultas,
-            "modo_edicao": id
-        })
 
-    if botao == "salvar":
-        try:
-            # Converte a data
-            data_convertida = datetime.strptime(data_nascimento, "%Y-%m-%d").date()
-        except Exception as e:
-            return templates.TemplateResponse("consulta.html", {
-                "request": request,
-                "consultas": repo.remetente_repo.listar_remetentes(),
-                "modo_edicao": id,
-                "erro": f"Data inválida: {data_nascimento}"
-            })
+@app.get("/alterar_dados/{id}", response_class=HTMLResponse)
+async def editar_dados(request: Request):
+    # Aqui você buscaria os dados do remetente no banco
+    remetentes = repo.remetente_repo.obter_remetente_por_id(1)  # Sua função personalizada
+    return templates.TemplateResponse("alterar_dados.html", {"request": request, "remetentes": remetentes})
 
-        # Monta objeto e atualiza no banco
-        remetente_obj = Remetente(
-            id=id,
-            remetente=remetente,
-            data_nascimento=data_convertida,
-            crime=crime,
-            tempo_sentenca=tempo_sentenca,
-            cela=cela,
-            comportamento=comportamento
-        )
-        consultas = repo.remetente_repo.listar_remetentes(remetente_obj)
-        return templates.TemplateResponse("consulta.html", {
-        "request": request,
-        "consultas": consultas,
-        "modo_edicao": None,
-        "sucesso": "Remetente atualizado com sucesso!"
-    })
 
-    elif botao == "excluir":
-        repo.remetente_repo.excluir_remetente(id)
-        return templates.TemplateResponse("consulta.html", {
-            "request": request,
-            "consultas": repo.remetente_repo.listar_remetentes(),
-            "modo_edicao": None,
-            "sucesso": "Remetente excluído com sucesso!"
-        })
 
-    else:
-        return RedirectResponse("/consulta", status_code=303)
+
+
+
 
 
 if __name__ == "__main__":
