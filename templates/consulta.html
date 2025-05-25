@@ -8,23 +8,55 @@
         integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <title>Consulta de Dados</title>
     <style>
-        /* Estilo para o formulário com borda e sombra */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            background-image: url('/static/apac.png');
+            background-size: 120% 120%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+        }
+
+        /* Navbar personalizada */
+        .navbar-custom {
+            background-color: #0056b3;
+        }
+
+        .nav-link {
+            color: white !important;
+        }
+
+        /* Conteúdo centralizado abaixo da navbar */
+        .centered-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 56px); /* Altura da tela menos a navbar */
+            padding: 1rem;
+        }
+
+        /* Estilo do card da tabela */
         .card {
             border: 1px solid #ccc;
             border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            width: 100%;
+            max-width: 1200px;
         }
 
-        /* Estilo da célula de ações */
         .acoes {
             white-space: nowrap;
         }
 
-        /* Estilo dos botões */
         .btn-sm {
             margin-right: 4px;
         }
 
-        /* Adicional (hover de linha, opcional) */
         tr:hover {
             background-color: #f2f2f2;
         }
@@ -33,9 +65,9 @@
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Consulta de Dados</a>
+            <a class="navbar-brand text-white" href="#">Consulta de Dados</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Alternar navegação">
                 <span class="navbar-toggler-icon"></span>
@@ -56,9 +88,9 @@
         </div>
     </nav>
 
-    <!-- Formulário com estilo de card -->
-    <div class="container mt-4">
-        <div class="card shadow p-4">
+    <!-- Conteúdo Centralizado -->
+    <div class="centered-content">
+        <div class="card p-4">
             <h5 class="card-title mb-4">Lista de Remetentes</h5>
 
             <div class="table-responsive">
@@ -119,7 +151,6 @@
                         </tr>
                         {% endfor %}
                     </tbody>
-
                 </table>
             </div>
         </div>
