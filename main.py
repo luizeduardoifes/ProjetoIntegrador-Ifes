@@ -10,7 +10,6 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 import repo.remetente_repo
 from datetime import datetime
-from starlette.status import HTTP_302_FOUND
 
 
 app = FastAPI()
