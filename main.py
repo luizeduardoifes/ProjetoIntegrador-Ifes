@@ -44,6 +44,13 @@ async def ponto(request: Request):
     consultas = repo.remetente_repo.obter_remetentes_por_pagina(12, 0)
     return templates.TemplateResponse("ponto.html", {"request": request, "consultas": consultas})
 
+@app.post("/salvar_registros", response_class=HTMLResponse)
+async def salvar_registros(
+    request: Request,
+    remetente: int = Form(...),
+    
+):
+
 
 @app.get("/cadastro", response_class=HTMLResponse)
 async def cadastro(request: Request):

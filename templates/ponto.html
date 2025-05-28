@@ -173,7 +173,7 @@
                 <thead>
                     <tr>
                         <th>Data</th>
-                        <th>Nome</th>
+                        <th>remetente</th>
                         <th>Entrada</th>
                         <th>Entrada Intervalo</th>
                         <th>Saída Intervalo</th>
@@ -187,7 +187,7 @@
 
     <script>
         function registrarPonto() {
-            let nome = document.getElementById("remetenteSelect").value;
+            let remetente = document.getElementById("remetenteSelect").value;
             let tipoEntrada = document.getElementById("tipoEntrada").value;
             let data = document.getElementById("dataRegistro").value;
             let tabela = document.getElementById("tabelaPonto");
@@ -198,8 +198,8 @@
                 return;
             }
 
-            if (!nome || nome === "") {
-                alert("Erro: Por favor, selecione um Remetente.");
+            if (!remetente || remetente === "") {
+                alert("Erro: Por favor, selecione um remetente.");
                 return;
             }
 
@@ -208,7 +208,7 @@
 
             for (let i = 0; i < linhas.length; i++) {
                 let colunas = linhas[i].getElementsByTagName("td");
-                if (colunas.length > 0 && colunas[0].innerText === data && colunas[1].innerText === nome) {
+                if (colunas.length > 0 && colunas[0].innerText === data && colunas[1].innerText === remetente) {
                     linhaExistente = linhas[i];
                     break;
                 }
@@ -241,7 +241,7 @@
                 let linha = document.createElement("tr");
                 linha.innerHTML = `
                     <td>${data}</td>
-                    <td>${nome}</td>
+                    <td>${remetente}</td>
                     <td>${horarioAtual}</td>
                     <td>-</td>
                     <td>-</td>
@@ -266,15 +266,15 @@
             let linhas = tabela.getElementsByTagName("tr");
             let y = 20;
 
-            doc.text("Data | Nome | Dias Remidos", 10, y);
+            doc.text("Data | remetente | Dias Remidos", 10, y);
             y += 10;
 
             for (let i = 0; i < linhas.length; i++) {
                 let colunas = linhas[i].getElementsByTagName("td");
                 let data = colunas[0].innerText;
-                let nome = colunas[1].innerText;
+                let remetente = colunas[1].innerText;
                 let diasRemidos = Math.floor(Math.random() * 10) + 1;
-                doc.text(`${data} | ${nome} | ${diasRemidos} dias`, 10, y);
+                doc.text(`${data} | ${remetente} | ${diasRemidos} dias`, 10, y);
                 y += 10;
             }
 
@@ -290,7 +290,7 @@
                 let colunas = linhas[i].getElementsByTagName("td");
                 registros.push({
                     data: colunas[0].innerText,
-                    nome: colunas[1].innerText,
+                    remetente: colunas[1].innerText,
                     entrada: colunas[2].innerText,
                     entrada_intervalo: colunas[3].innerText,
                     saida_intervalo: colunas[4].innerText,
