@@ -2,10 +2,10 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Batimento de Ponto</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         body {
@@ -58,7 +58,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
         }
 
@@ -80,7 +80,7 @@
         button {
             width: 100%;
             padding: 10px;
-            background-color: #007BFF;
+            background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
@@ -109,7 +109,7 @@
         }
 
         th {
-            background-color: #007BFF;
+            background-color: #007bff;
             color: white;
         }
 
@@ -145,7 +145,9 @@
         <div class="container">
             <h2>Batimento de Ponto</h2>
 
-            <!-- Select com value vazio corrigido -->
+            <!-- NOVO CAMPO DE DATA -->
+            <input type="date" id="dataRegistro" required />
+
             <select id="remetenteSelect">
                 <option value="" disabled selected hidden>Selecione um remetente</option>
                 {% for consulta in consultas %}
@@ -167,16 +169,15 @@
             <table>
                 <thead>
                     <tr>
+                        <th>Data</th>
                         <th>Nome</th>
-                        <th>Horário de Entrada</th>
+                        <th>Entrada</th>
                         <th>Entrada Intervalo</th>
                         <th>Saída Intervalo</th>
-                        <th>Horário de Saída</th>
+                        <th>Saída</th>
                     </tr>
                 </thead>
-                <tbody id="tabelaPonto">
-                    <!-- Registros aparecerão aqui -->
-                </tbody>
+                <tbody id="tabelaPonto"></tbody>
             </table>
         </div>
     </div>
@@ -185,8 +186,14 @@
         function registrarPonto() {
             let nome = document.getElementById("remetenteSelect").value;
             let tipoEntrada = document.getElementById("tipoEntrada").value;
+            let data = document.getElementById("dataRegistro").value;
             let tabela = document.getElementById("tabelaPonto");
             let horarioAtual = new Date().toLocaleTimeString();
+
+            if (!data) {
+                alert("Por favor, selecione a data.");
+                return;
+            }
 
             if (!nome || nome === "") {
                 alert("Erro: Por favor, selecione um Remetente.");
@@ -198,49 +205,45 @@
 
             for (let i = 0; i < linhas.length; i++) {
                 let colunas = linhas[i].getElementsByTagName("td");
-                if (colunas.length > 0 && colunas[0].innerText === nome) {
+                if (colunas.length > 0 && colunas[0].innerText === data && colunas[1].innerText === nome) {
                     linhaExistente = linhas[i];
                     break;
                 }
             }
 
             const ordem = ["entrada", "entrada_intervalo", "saida_intervalo", "saida"];
+            const indices = { entrada: 2, entrada_intervalo: 3, saida_intervalo: 4, saida: 5 };
 
             if (linhaExistente) {
                 let colunas = linhaExistente.getElementsByTagName("td");
-                let ultimoBatido = -1;
-                for (let i = 1; i <= 4; i++) {
-                    if (colunas[i].innerText !== "-" && colunas[i].innerText !== "") {
-                        ultimoBatido = i - 1;
-                    } else {
-                        break;
-                    }
-                }
-                let proximoEsperado = ultimoBatido + 1;
                 let tipoIndex = ordem.indexOf(tipoEntrada);
-                if (tipoIndex !== proximoEsperado) {
+                let esperadoIndex = 2;
+
+                while (esperadoIndex <= 5 && colunas[esperadoIndex].innerText !== "-" && colunas[esperadoIndex].innerText !== "") {
+                    esperadoIndex++;
+                }
+
+                if (indices[tipoEntrada] !== esperadoIndex) {
                     alert("Por favor, siga a ordem correta de batimento de ponto.");
                     return;
                 }
-                switch (tipoEntrada) {
-                    case "entrada": colunas[1].innerText = horarioAtual; break;
-                    case "entrada_intervalo": colunas[2].innerText = horarioAtual; break;
-                    case "saida_intervalo": colunas[3].innerText = horarioAtual; break;
-                    case "saida": colunas[4].innerText = horarioAtual; break;
-                }
+
+                colunas[indices[tipoEntrada]].innerText = horarioAtual;
             } else {
                 if (tipoEntrada !== "entrada") {
                     alert("O primeiro batimento deve ser 'Horário de Entrada'.");
                     return;
                 }
+
                 let linha = document.createElement("tr");
                 linha.innerHTML = `
-                    <td>${nome}</td>
-                    <td>${horarioAtual}</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                `;
+          <td>${data}</td>
+          <td>${nome}</td>
+          <td>${horarioAtual}</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        `;
                 tabela.appendChild(linha);
             }
 
@@ -260,14 +263,15 @@
             let linhas = tabela.getElementsByTagName("tr");
             let y = 20;
 
-            doc.text("Nome | Dias Remidos", 10, y);
+            doc.text("Data | Nome | Dias Remidos", 10, y);
             y += 10;
 
             for (let i = 0; i < linhas.length; i++) {
                 let colunas = linhas[i].getElementsByTagName("td");
-                let nome = colunas[0].innerText;
+                let data = colunas[0].innerText;
+                let nome = colunas[1].innerText;
                 let diasRemidos = Math.floor(Math.random() * 10) + 1;
-                doc.text(`${nome} | ${diasRemidos} dias`, 10, y);
+                doc.text(`${data} | ${nome} | ${diasRemidos} dias`, 10, y);
                 y += 10;
             }
 
