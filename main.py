@@ -103,12 +103,52 @@ async def consulta_get(request: Request):
         "modo_edicao": None
     })
 
+@app.post("/formeditar", response_class=HTMLResponse)
+async def editar_remetente(
+    request: Request,
+    id: int = Form(...),
+    remetente: str = Form(...),
+    data_nascimento: str = Form(...),
+    crime: str = Form(...),
+    tempo_sentenca: int = Form(...),
+    cela: str = Form(...),
+    comportamento: str = Form(...)
+):
+    try:
+        # Converte a string para data no formato yyyy-mm-dd
+        data_formatada = datetime.strptime(data_nascimento, "%Y-%m-%d").date()
 
-@app.get("/alterar_dados/{id}", response_class=HTMLResponse)
-async def editar_dados(request: Request):
-    # Aqui você buscaria os dados do remetente no banco
-    remetentes = repo.remetente_repo.obter_remetente_por_id(1)  # Sua função personalizada
-    return templates.TemplateResponse("alterar_dados.html", {"request": request, "remetentes": remetentes})
+        # Cria o objeto remetente
+        remetente_obj = Remetente(
+            id=id,
+            remetente=remetente,
+            data_nascimento=data_formatada,
+            crime=crime,
+            tempo_sentenca=tempo_sentenca,
+            cela=cela,
+            comportamento=comportamento
+        )
+
+        # Atualiza no banco
+        repo.remetente_repo.atualizar_remetente(remetente_obj)
+
+        # Redireciona para a página de consulta
+        return templates.TemplateResponse("consulta.html", {
+            "request": request,
+            "sucesso": "Remetente editado com sucesso!",
+            "consultas": repo.remetente_repo.atualizar_remetente(remetente_obj),
+            "modo_edicao": None
+        })
+
+    except Exception as e:
+        return templates.TemplateResponse(
+            "consulta.html",
+            {
+                "request": request,
+                "erro": f"Erro ao editar: {str(e)}"
+            }
+        )
+
 
 
 
