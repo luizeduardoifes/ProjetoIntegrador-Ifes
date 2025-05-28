@@ -142,29 +142,32 @@
     </nav>
 
     <div class="main-container">
-        <div class="container">
+        <form class="container" method="POST" action="/salvar_registros" onsubmit="return prepararEnvioFormulario()">
             <h2>Batimento de Ponto</h2>
 
-            <!-- NOVO CAMPO DE DATA -->
+            <!-- CAMPO DE DATA -->
             <input type="date" id="dataRegistro" required />
 
-            <select id="remetenteSelect">
+            <select id="remetenteSelect" required>
                 <option value="" disabled selected hidden>Selecione um remetente</option>
                 {% for consulta in consultas %}
                 <option value="{{ consulta.remetente }}">{{ consulta.remetente }}</option>
                 {% endfor %}
             </select>
 
-            <select id="tipoEntrada">
+            <select id="tipoEntrada" required>
                 <option value="entrada">Horário de Entrada</option>
                 <option value="entrada_intervalo">Entrada Intervalo</option>
                 <option value="saida_intervalo">Saída Intervalo</option>
                 <option value="saida">Horário de Saída</option>
             </select>
 
-            <button onclick="registrarPonto()">Registrar Ponto</button>
-            <button onclick="limparTabela()">Limpar Registros</button>
-            <button onclick="gerarRelatorioPDF()">Gerar Relatório de Dias Remidos (PDF)</button>
+            <button type="button" onclick="registrarPonto()">Registrar Ponto</button>
+            <button type="button" onclick="limparTabela()">Limpar Registros</button>
+            <button type="button" onclick="gerarRelatorioPDF()">Gerar Relatório de Dias Remidos (PDF)</button>
+            <button type="submit">Salvar Pontos Registrados</button>
+
+            <input type="hidden" name="registros" id="registrosOcultos">
 
             <table>
                 <thead>
@@ -179,7 +182,7 @@
                 </thead>
                 <tbody id="tabelaPonto"></tbody>
             </table>
-        </div>
+        </form>
     </div>
 
     <script>
@@ -237,13 +240,13 @@
 
                 let linha = document.createElement("tr");
                 linha.innerHTML = `
-          <td>${data}</td>
-          <td>${nome}</td>
-          <td>${horarioAtual}</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-        `;
+                    <td>${data}</td>
+                    <td>${nome}</td>
+                    <td>${horarioAtual}</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                `;
                 tabela.appendChild(linha);
             }
 
@@ -276,6 +279,27 @@
             }
 
             doc.save("relatorio_dias_remidos.pdf");
+        }
+
+        function prepararEnvioFormulario() {
+            let tabela = document.getElementById("tabelaPonto");
+            let linhas = tabela.getElementsByTagName("tr");
+            let registros = [];
+
+            for (let i = 0; i < linhas.length; i++) {
+                let colunas = linhas[i].getElementsByTagName("td");
+                registros.push({
+                    data: colunas[0].innerText,
+                    nome: colunas[1].innerText,
+                    entrada: colunas[2].innerText,
+                    entrada_intervalo: colunas[3].innerText,
+                    saida_intervalo: colunas[4].innerText,
+                    saida: colunas[5].innerText
+                });
+            }
+
+            document.getElementById("registrosOcultos").value = JSON.stringify(registros);
+            return true;
         }
     </script>
 
