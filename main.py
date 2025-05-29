@@ -10,6 +10,10 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 import repo.remetente_repo
 from datetime import datetime
+from repo.registro_ponto_repo import criar_tabela_registro_ponto
+
+
+
 
 
 app = FastAPI()
@@ -18,9 +22,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    tabela = criar_tabela_encarregado()
+    registro_ponto = criar_tabela_registro_ponto()
+    tabela_encarregado = criar_tabela_encarregado()
     tabela_remetente = repo.remetente_repo.criar_tabela_remetente()
-    return templates.TemplateResponse("entrar.html", {"request": request, "tabela": tabela, "tabela_remetente": tabela_remetente})
+    return templates.TemplateResponse("entrar.html", {"request": request, "tabela_encarregado": tabela_encarregado, "tabela_remetente": tabela_remetente, "registro_ponto": registro_ponto})
 
 @app.get("/login", response_class=HTMLResponse)
 def read_login(request: Request):
@@ -45,11 +50,57 @@ async def ponto(request: Request):
     return templates.TemplateResponse("ponto.html", {"request": request, "consultas": consultas})
 
 @app.post("/salvar_registros", response_class=HTMLResponse)
-async def salvar_registros(
+def salvar_registros(
     request: Request,
     remetente: int = Form(...),
+    data: str = Form(...),
+    entrada: str = Form(...),
+    entrada_intervalo: str = Form(...),
+    saida_intervalo: str = Form(...),
+    saida: str = Form(...),
+    horas_trabalhadas: float = Form(...)
     
 ):
+    try:
+        # Converte as strings para os tipos corretos
+        data_formatada = datetime.strptime(data, "%Y-%m-%d").date()
+        entrada_formatada = datetime.strptime(entrada, "%H:%M").time()
+        entrada_intervalo_formatada = datetime.strptime(entrada_intervalo, "%H:%M").time()
+        saida_intervalo_formatada = datetime.strptime(saida_intervalo, "%H:%M").time()
+        saida_formatada = datetime.strptime(saida, "%H:%M").time()
+
+        # Cria o objeto remetente
+        remetente_obj = Remetente(
+            id=remetente,
+            data_nascimento=data_formatada,
+            remetente=remetente,
+            crime="",
+            tempo_sentenca=0,
+            cela="",
+            comportamento=""
+        )
+
+        # Salva os registros no banco de dados
+        repo.remetente_repo.salvar_registros(
+            remetente=remetente_obj,
+            data=data_formatada,
+            entrada=entrada_formatada,
+            entrada_intervalo=entrada_intervalo_formatada,
+            saida_intervalo=saida_intervalo_formatada,
+            saida=saida_formatada,
+            horas_trabalhadas=horas_trabalhadas
+        )
+
+        return templates.TemplateResponse("ponto.html", {"request": request, "sucesso": "Registros salvos com sucesso!"})
+
+    except Exception as e:
+        return templates.TemplateResponse(
+            "ponto.html",
+            {
+                "request": request,
+                "erro": f"Erro ao salvar registros: {str(e)}"
+            }
+        )
 
 
 @app.get("/cadastro", response_class=HTMLResponse)
