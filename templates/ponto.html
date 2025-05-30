@@ -1,309 +1,317 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Batimento de Ponto</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #eef2f3;
-            background-image: url('/static/apac.png');
-            background-size: 120% 120%;
-            background-position: center;
-            background-repeat: no-repeat;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Batimento de Ponto</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eef2f3;
+      background-image: url('/static/apac.png');
+      background-size: 120% 120%;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin: 0;
+      padding: 0;
+    }
 
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
 
-        .navbar-custom {
-            background-color: #0056b3;
-        }
+    .navbar-custom {
+      background-color: #0056b3;
+    }
 
-        .nav-link {
-            color: white !important;
-        }
+    .nav-link {
+      color: white !important;
+    }
 
-        .nav-link:hover {
-            text-decoration: underline;
-        }
+    .nav-link:hover {
+      text-decoration: underline;
+    }
 
-        .navbar-brand {
-            font-weight: bold;
-        }
+    .navbar-brand {
+      font-weight: bold;
+    }
 
-        .main-container {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            flex-direction: column;
-            padding: 20px;
-            margin-top: 100px;
-        }
+    .main-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-direction: column;
+      padding: 20px;
+      margin-top: 100px;
+    }
 
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            width: 100%;
-            max-width: 700px;
-            margin: 0 auto;
-        }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
+    }
 
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
-        }
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
 
-        input,
-        select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
 
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-        }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+    button:hover {
+      background-color: #0056b3;
+    }
 
-        table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-            background: white;
-        }
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+      background: white;
+    }
 
-        th,
-        td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
+    th,
+    td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
 
-        th {
-            background-color: #007bff;
-            color: white;
-        }
+    th {
+      background-color: #007bff;
+      color: white;
+    }
 
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
 
-        html,
-        body {
-            height: 100%;
-        }
-    </style>
+    html, body {
+      height: 100%;
+    }
+  </style>
 </head>
-
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Batimento de Ponto</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="/inicial">Início</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/relatorio">Geração de Relatórios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/cadastro">Cadastro de Remetentes</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 
-    <div class="main-container">
-        <form class="container" method="POST" action="/salvar_registros" onsubmit="return prepararEnvioFormulario()">
-            <h2>Batimento de Ponto</h2>
-
-            <!-- CAMPO DE DATA -->
-            <input type="date" id="dataRegistro" required />
-
-            <select id="remetenteSelect" required>
-                <option value="" disabled selected hidden>Selecione um remetente</option>
-                {% for consulta in consultas %}
-                <option value="{{ consulta.remetente }}">{{ consulta.remetente }}</option>
-                {% endfor %}
-            </select>
-
-            <select id="tipoEntrada" required>
-                <option value="entrada">Horário de Entrada</option>
-                <option value="entrada_intervalo">Entrada Intervalo</option>
-                <option value="saida_intervalo">Saída Intervalo</option>
-                <option value="saida">Horário de Saída</option>
-            </select>
-
-            <button type="button" onclick="registrarPonto()">Registrar Ponto</button>
-            <button type="button" onclick="limparTabela()">Limpar Registros</button>
-            <button type="button" onclick="gerarRelatorioPDF()">Gerar Relatório de Dias Remidos (PDF)</button>
-            <button type="submit">Salvar Pontos Registrados</button>
-
-            <input type="hidden" name="registros" id="registrosOcultos">
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>remetente</th>
-                        <th>Entrada</th>
-                        <th>Entrada Intervalo</th>
-                        <th>Saída Intervalo</th>
-                        <th>Saída</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelaPonto"></tbody>
-            </table>
-        </form>
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Batimento de Ponto</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="/inicial">Início</a></li>
+          <li class="nav-item"><a class="nav-link" href="/relatorio">Geração de Relatórios</a></li>
+          <li class="nav-item"><a class="nav-link" href="/cadastro">Cadastro de Remetentes</a></li>
+        </ul>
+      </div>
     </div>
+  </nav>
 
-    <script>
-        function registrarPonto() {
-            let remetente = document.getElementById("remetenteSelect").value;
-            let tipoEntrada = document.getElementById("tipoEntrada").value;
-            let data = document.getElementById("dataRegistro").value;
-            let tabela = document.getElementById("tabelaPonto");
-            let horarioAtual = new Date().toLocaleTimeString();
+  <div class="main-container">
+    <div class="container">
+      <h2>Batimento de Ponto</h2>
 
-            if (!data) {
-                alert("Por favor, selecione a data.");
-                return;
-            }
+      <input type="date" id="dataRegistro" required />
 
-            if (!remetente || remetente === "") {
-                alert("Erro: Por favor, selecione um remetente.");
-                return;
-            }
+      <select id="remetenteSelect" required>
+        <option value="" disabled selected hidden>Selecione um remetente</option>
+        {% for consulta in consultas %}
+        <option value="{{ consulta.remetente }}">{{ consulta.remetente }}</option>
+        {% endfor %}
+      </select>
 
-            let linhas = tabela.getElementsByTagName("tr");
-            let linhaExistente = null;
+      <select id="tipoEntrada" required>
+        <option value="entrada">Horário de Entrada</option>
+        <option value="entrada_intervalo">Entrada Intervalo</option>
+        <option value="saida_intervalo">Saída Intervalo</option>
+        <option value="saida">Horário de Saída</option>
+      </select>
 
-            for (let i = 0; i < linhas.length; i++) {
-                let colunas = linhas[i].getElementsByTagName("td");
-                if (colunas.length > 0 && colunas[0].innerText === data && colunas[1].innerText === remetente) {
-                    linhaExistente = linhas[i];
-                    break;
-                }
-            }
+      <button type="button" onclick="registrarPonto()">Registrar Ponto</button>
+      <button type="button" onclick="limparTabela()">Limpar Registros</button>
+      <button type="button" onclick="gerarRelatorioPDF()">Gerar Relatório de Dias Remidos (PDF)</button>
+      <button type="button" onclick="salvarRegistros()">Salvar Pontos Registrados</button>
 
-            const ordem = ["entrada", "entrada_intervalo", "saida_intervalo", "saida"];
-            const indices = { entrada: 2, entrada_intervalo: 3, saida_intervalo: 4, saida: 5 };
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Remetente</th>
+            <th>Entrada</th>
+            <th>Entrada Intervalo</th>
+            <th>Saída Intervalo</th>
+            <th>Saída</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaPonto"></tbody>
+      </table>
+    </div>
+  </div>
 
-            if (linhaExistente) {
-                let colunas = linhaExistente.getElementsByTagName("td");
-                let tipoIndex = ordem.indexOf(tipoEntrada);
-                let esperadoIndex = 2;
+  <script>
+    function registrarPonto() {
+      let remetente = document.getElementById("remetenteSelect").value;
+      let tipoEntrada = document.getElementById("tipoEntrada").value;
+      let data = document.getElementById("dataRegistro").value;
+      let tabela = document.getElementById("tabelaPonto");
+      let horarioAtual = new Date().toLocaleTimeString('pt-BR');
 
-                while (esperadoIndex <= 5 && colunas[esperadoIndex].innerText !== "-" && colunas[esperadoIndex].innerText !== "") {
-                    esperadoIndex++;
-                }
+      if (!data) {
+        alert("Por favor, selecione a data.");
+        return;
+      }
 
-                if (indices[tipoEntrada] !== esperadoIndex) {
-                    alert("Por favor, siga a ordem correta de batimento de ponto.");
-                    return;
-                }
+      if (!remetente || remetente === "") {
+        alert("Erro: Por favor, selecione um remetente.");
+        return;
+      }
 
-                colunas[indices[tipoEntrada]].innerText = horarioAtual;
-            } else {
-                if (tipoEntrada !== "entrada") {
-                    alert("O primeiro batimento deve ser 'Horário de Entrada'.");
-                    return;
-                }
+      let linhas = tabela.getElementsByTagName("tr");
+      let linhaExistente = null;
 
-                let linha = document.createElement("tr");
-                linha.innerHTML = `
-                    <td>${data}</td>
-                    <td>${remetente}</td>
-                    <td>${horarioAtual}</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                `;
-                tabela.appendChild(linha);
-            }
+      for (let i = 0; i < linhas.length; i++) {
+        let colunas = linhas[i].getElementsByTagName("td");
+        if (colunas.length > 0 && colunas[0].innerText === data && colunas[1].innerText === remetente) {
+          linhaExistente = linhas[i];
+          break;
+        }
+      }
 
-            document.getElementById("remetenteSelect").selectedIndex = 0;
+      const ordem = ["entrada", "entrada_intervalo", "saida_intervalo", "saida"];
+      const indices = { entrada: 2, entrada_intervalo: 3, saida_intervalo: 4, saida: 5 };
+
+      if (linhaExistente) {
+        let colunas = linhaExistente.getElementsByTagName("td");
+        let tipoIndex = ordem.indexOf(tipoEntrada);
+        let esperadoIndex = 2;
+
+        while (esperadoIndex <= 5 && colunas[esperadoIndex].innerText !== "-" && colunas[esperadoIndex].innerText !== "") {
+          esperadoIndex++;
         }
 
-        function limparTabela() {
-            document.getElementById("tabelaPonto").innerHTML = "";
+        if (indices[tipoEntrada] !== esperadoIndex) {
+          alert("Por favor, siga a ordem correta de batimento de ponto.");
+          return;
         }
 
-        function gerarRelatorioPDF() {
-            const { jsPDF } = window.jspdf;
-            let doc = new jsPDF();
-            doc.text("Relatório de Dias Remidos", 10, 10);
-
-            let tabela = document.getElementById("tabelaPonto");
-            let linhas = tabela.getElementsByTagName("tr");
-            let y = 20;
-
-            doc.text("Data | remetente | Dias Remidos", 10, y);
-            y += 10;
-
-            for (let i = 0; i < linhas.length; i++) {
-                let colunas = linhas[i].getElementsByTagName("td");
-                let data = colunas[0].innerText;
-                let remetente = colunas[1].innerText;
-                let diasRemidos = Math.floor(Math.random() * 10) + 1;
-                doc.text(`${data} | ${remetente} | ${diasRemidos} dias`, 10, y);
-                y += 10;
-            }
-
-            doc.save("relatorio_dias_remidos.pdf");
+        colunas[indices[tipoEntrada]].innerText = horarioAtual;
+      } else {
+        if (tipoEntrada !== "entrada") {
+          alert("O primeiro batimento deve ser 'Horário de Entrada'.");
+          return;
         }
 
-        function prepararEnvioFormulario() {
-            let tabela = document.getElementById("tabelaPonto");
-            let linhas = tabela.getElementsByTagName("tr");
-            let registros = [];
+        let linha = document.createElement("tr");
+        linha.innerHTML = `
+          <td>${data}</td>
+          <td>${remetente}</td>
+          <td>${horarioAtual}</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        `;
+        tabela.appendChild(linha);
+      }
 
-            for (let i = 0; i < linhas.length; i++) {
-                let colunas = linhas[i].getElementsByTagName("td");
-                registros.push({
-                    data: colunas[0].innerText,
-                    remetente: colunas[1].innerText,
-                    entrada: colunas[2].innerText,
-                    entrada_intervalo: colunas[3].innerText,
-                    saida_intervalo: colunas[4].innerText,
-                    saida: colunas[5].innerText
-                });
-            }
+      document.getElementById("remetenteSelect").selectedIndex = 0;
+    }
 
-            document.getElementById("registrosOcultos").value = JSON.stringify(registros);
-            return true;
+    function limparTabela() {
+      document.getElementById("tabelaPonto").innerHTML = "";
+    }
+
+    function gerarRelatorioPDF() {
+      const { jsPDF } = window.jspdf;
+      let doc = new jsPDF();
+      doc.text("Relatório de Dias Remidos", 10, 10);
+
+      let tabela = document.getElementById("tabelaPonto");
+      let linhas = tabela.getElementsByTagName("tr");
+      let y = 20;
+
+      doc.text("Data | Remetente | Dias Remidos", 10, y);
+      y += 10;
+
+      for (let i = 0; i < linhas.length; i++) {
+        let colunas = linhas[i].getElementsByTagName("td");
+        let data = colunas[0].innerText;
+        let remetente = colunas[1].innerText;
+        let diasRemidos = Math.floor(Math.random() * 10) + 1;
+        doc.text(`${data} | ${remetente} | ${diasRemidos} dias`, 10, y);
+        y += 10;
+      }
+
+      doc.save("relatorio_dias_remidos.pdf");
+    }
+
+    async function salvarRegistros() {
+      const tabela = document.getElementById("tabelaPonto");
+      const linhas = tabela.getElementsByTagName("tr");
+      let registros = [];
+
+      for (let i = 0; i < linhas.length; i++) {
+        const colunas = linhas[i].getElementsByTagName("td");
+        registros.push({
+          data: colunas[0].innerText,
+          remetente: colunas[1].innerText,
+          entrada: colunas[2].innerText,
+          entrada_intervalo: colunas[3].innerText,
+          saida_intervalo: colunas[4].innerText,
+          saida: colunas[5].innerText
+        });
+      }
+
+      try {
+        const response = await fetch("/salvar_registros", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(registros)
+        });
+
+        if (response.ok) {
+          alert("Registros salvos com sucesso!");
+        } else {
+          const erro = await response.json();
+          alert("Erro ao salvar registros:\n" + JSON.stringify(erro.detail, null, 2));
         }
-    </script>
+      } catch (e) {
+        alert("Erro ao se conectar com o servidor.");
+      }
+    }
+  </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

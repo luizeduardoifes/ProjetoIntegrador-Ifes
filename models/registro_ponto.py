@@ -7,6 +7,7 @@ from datetime import date, time
 class RegistroPonto:
     id: int
     data: date
+    remetente: str
     entrada: time
     entrada_intervalo: time
     saida_intervalo: time

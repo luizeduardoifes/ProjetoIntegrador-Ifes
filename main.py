@@ -1,17 +1,24 @@
+import json
+from typing import List
 from fastapi.staticfiles import StaticFiles
 from fastapi import Depends, FastAPI, Form, Request
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from referencing import Registry
 from models.get_db import get_db
 from models.base import Usuario
+from models.registro_ponto import RegistroPonto
 from models.remetente import Remetente
 from repo.encarregado_repo import criar_tabela_encarregado
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 import repo.remetente_repo
 from datetime import datetime
+import repo.registro_ponto_repo
 
-
+criar_tabela_encarregado()
+repo.remetente_repo.criar_tabela_remetente()
+repo.registro_ponto_repo.criar_tabela_registro_ponto()
 
 
 
@@ -22,10 +29,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    
-    tabela_encarregado = criar_tabela_encarregado()
-    tabela_remetente = repo.remetente_repo.criar_tabela_remetente()
-    return templates.TemplateResponse("entrar.html", {"request": request, "tabela_encarregado": tabela_encarregado, "tabela_remetente": tabela_remetente})
+    return templates.TemplateResponse("entrar.html", {"request": request})
 
 @app.get("/login", response_class=HTMLResponse)
 def read_login(request: Request):
@@ -48,6 +52,32 @@ async def inicial(request: Request):
 async def ponto(request: Request):
     consultas = repo.remetente_repo.obter_remetentes_por_pagina(12, 0)
     return templates.TemplateResponse("ponto.html", {"request": request, "consultas": consultas})
+
+@app.post("/salvar_registros", response_class=HTMLResponse)
+async def salvar_registros(
+    request: Request,
+    registros: List[RegistroPonto]
+     # injeta a sessão
+):
+    
+
+    for reg in registros:
+        novo_registro = RegistroPonto(
+            data=reg.data,
+            remetente=reg.remetente,
+            entrada=reg.entrada,
+            entrada_intervalo=reg.entrada_intervalo,
+            saida_intervalo=reg.saida_intervalo,
+            saida=reg.saida
+        )
+        ponto = repo.registro_ponto_repo.inserir_registro_ponto(novo_registro)
+       
+
+    return templates.TemplateResponse("ponto.html", {
+        "request": request,
+        "sucesso": "Registros salvos com sucesso!",
+        "pontos": ponto
+    })
 
 
 

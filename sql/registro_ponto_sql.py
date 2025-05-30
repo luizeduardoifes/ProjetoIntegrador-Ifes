@@ -38,3 +38,11 @@ FROM registro_ponto
 ORDER BY data DESC
 LIMIT ? OFFSET ?;
 """
+
+GET_REGISTRO_PONTO_BY_REMETENTE = """
+SELECT id, data, remetente, entrada, entrada_intervalo, saida_intervalo, saida
+FROM registro_ponto
+WHERE remetente = ?
+ORDER BY data DESC
+LIMIT ? OFFSET ?;
+"""
