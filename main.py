@@ -54,7 +54,7 @@ async def ponto(request: Request):
     return templates.TemplateResponse("ponto.html", {"request": request, "consultas": consultas})
 
 @app.post("/salvar_todos")
-def salvar_todos_registros(request: Request,registros: str = Form(...)):
+def salvar_todos_registros(registros: str = Form(...)):
     
         registros_lista = json.loads(registros)
        
@@ -77,7 +77,7 @@ def salvar_todos_registros(request: Request,registros: str = Form(...)):
             # Insere ou atualiza o registro no banco de dados
             registro = repo.registro_ponto_repo.inserir_registro_ponto(registro_ponto)
 
-        return templates.TemplateResponse("ponto.html", {"request": request, "sucesso": "Registros salvos com sucesso!", "regitro": registro})
+        return RedirectResponse(url="/ponto", status_code=303)
             
 
 

@@ -134,6 +134,11 @@
 
   textarea#registrosTexto {
     font-family: monospace;
+    display: none;
+  }
+
+  #registroasalvar{
+    display: none;
   }
 </style>
 
@@ -191,7 +196,7 @@
 
       <!-- Formulário de salvar dados ajustado -->
       <form method="POST" action="/salvar_todos" id="formSalvarTodos">
-        <label for="registrosTexto">Registros a salvar (JSON):</label>
+        <label id="registroasalvar" for="registrosTexto">Registros a salvar (JSON):</label>
         <textarea id="registrosTexto" name="registros" rows="10" readonly></textarea>
         <button type="submit">Salvar Pontos Registrados</button>
       </form>
