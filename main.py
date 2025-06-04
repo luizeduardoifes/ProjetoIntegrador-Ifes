@@ -50,34 +50,38 @@ async def inicial(request: Request):
 
 @app.get("/ponto", response_class=HTMLResponse)
 async def ponto(request: Request):
-    consultas = repo.remetente_repo.obter_remetentes_por_pagina(12, 0)
+    consultas = repo.remetente_repo.listar_remetentes()
     return templates.TemplateResponse("ponto.html", {"request": request, "consultas": consultas})
 
-@app.post("/salvar_registros", response_class=HTMLResponse)
-async def salvar_registros(
-    request: Request,
-    registros: List[RegistroPonto]
-     # injeta a sessão
-):
+@app.post("/salvar_todos")
+def salvar_todos_registros(request: Request,registros: str = Form(...)):
     
-
-    for reg in registros:
-        novo_registro = RegistroPonto(
-            data=reg.data,
-            remetente=reg.remetente,
-            entrada=reg.entrada,
-            entrada_intervalo=reg.entrada_intervalo,
-            saida_intervalo=reg.saida_intervalo,
-            saida=reg.saida
-        )
-        ponto = repo.registro_ponto_repo.inserir_registro_ponto(novo_registro)
+        registros_lista = json.loads(registros)
        
+        for registro in registros_lista:
+            # Converte a string de data para objeto datetime
+           
+            
+            # Cria o objeto RegistroPonto
+            registro_ponto = RegistroPonto(
+                id=0,  # ID será 0 se não existir
+                data=registro["data"],  # Data já deve estar no formato correto
+                remetente=registro["remetente"],
+                entrada=registro["entrada"],
+                entrada_intervalo=registro["entrada_intervalo"],
+                saida_intervalo=registro["saida_intervalo"],
+                saida=registro["saida"]
 
-    return templates.TemplateResponse("ponto.html", {
-        "request": request,
-        "sucesso": "Registros salvos com sucesso!",
-        "pontos": ponto
-    })
+            )
+            
+            # Insere ou atualiza o registro no banco de dados
+            registro = repo.registro_ponto_repo.inserir_registro_ponto(registro_ponto)
+
+        return templates.TemplateResponse("ponto.html", {"request": request, "sucesso": "Registros salvos com sucesso!", "regitro": registro})
+            
+
+
+
 
 
 
@@ -133,7 +137,7 @@ async def relatorio(request: Request):
 
 @app.get("/consulta", response_class=HTMLResponse)
 async def consulta_get(request: Request):
-    consultas = repo.remetente_repo.listar_remetentes()
+    consultas = repo.remetente_repo.obter_remetentes_por_pagina(12, 0)
     return templates.TemplateResponse("consulta.html", {
         "request": request,
         "consultas": consultas,

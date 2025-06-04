@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -116,11 +117,13 @@
       background-color: #f2f2f2;
     }
 
-    html, body {
+    html,
+    body {
       height: 100%;
     }
   </style>
 </head>
+
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
@@ -142,7 +145,7 @@
   <div class="main-container">
     <div class="container">
       <h2>Batimento de Ponto</h2>
-
+      <form onsubmit="return registrarPonto(event)" id="formRegistro"></form>
       <input type="date" id="dataRegistro" required />
 
       <select id="remetenteSelect" required>
@@ -152,17 +155,25 @@
         {% endfor %}
       </select>
 
-      <select id="tipoEntrada" required>
+      <select id="tipoEntrada" name="tipo" required>
         <option value="entrada">Horário de Entrada</option>
         <option value="entrada_intervalo">Entrada Intervalo</option>
         <option value="saida_intervalo">Saída Intervalo</option>
         <option value="saida">Horário de Saída</option>
       </select>
 
-      <button type="button" onclick="registrarPonto()">Registrar Ponto</button>
+      <button type="submit">Registrar Ponto</button>
+      </form>
+
+      <!-- Formulário de salvar dados ajustado -->
+      <form method="POST" action="/salvar_todos" id="formSalvarTodos">
+        <label for="registrosTexto">Registros a salvar (JSON):</label>
+        <textarea id="registrosTexto" name="registros" rows="10" readonly></textarea>
+        <button type="submit">Salvar Pontos Registrados</button>
+      </form>
+
       <button type="button" onclick="limparTabela()">Limpar Registros</button>
       <button type="button" onclick="gerarRelatorioPDF()">Gerar Relatório de Dias Remidos (PDF)</button>
-      <button type="button" onclick="salvarRegistros()">Salvar Pontos Registrados</button>
 
       <table>
         <thead>
@@ -181,21 +192,22 @@
   </div>
 
   <script>
-    function registrarPonto() {
+    function registrarPonto(event) {
+      event.preventDefault();
       let remetente = document.getElementById("remetenteSelect").value;
       let tipoEntrada = document.getElementById("tipoEntrada").value;
       let data = document.getElementById("dataRegistro").value;
       let tabela = document.getElementById("tabelaPonto");
-      let horarioAtual = new Date().toLocaleTimeString('pt-BR');
+      let horarioAtual = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
       if (!data) {
         alert("Por favor, selecione a data.");
-        return;
+        return false;
       }
 
       if (!remetente || remetente === "") {
         alert("Erro: Por favor, selecione um remetente.");
-        return;
+        return false;
       }
 
       let linhas = tabela.getElementsByTagName("tr");
@@ -223,33 +235,37 @@
 
         if (indices[tipoEntrada] !== esperadoIndex) {
           alert("Por favor, siga a ordem correta de batimento de ponto.");
-          return;
+          return false;
         }
 
         colunas[indices[tipoEntrada]].innerText = horarioAtual;
       } else {
         if (tipoEntrada !== "entrada") {
           alert("O primeiro batimento deve ser 'Horário de Entrada'.");
-          return;
+          return false;
         }
 
         let linha = document.createElement("tr");
         linha.innerHTML = `
           <td>${data}</td>
           <td>${remetente}</td>
-          <td>${horarioAtual}</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
+          <td>${tipoEntrada === 'entrada' ? horarioAtual : '-'}</td>
+          <td>${tipoEntrada === 'entrada_intervalo' ? horarioAtual : '-'}</td>
+          <td>${tipoEntrada === 'saida_intervalo' ? horarioAtual : '-'}</td>
+          <td>${tipoEntrada === 'saida' ? horarioAtual : '-'}</td>
         `;
         tabela.appendChild(linha);
       }
 
       document.getElementById("remetenteSelect").selectedIndex = 0;
+      return false;
     }
 
     function limparTabela() {
-      document.getElementById("tabelaPonto").innerHTML = "";
+      if (confirm("Tem certeza que deseja limpar todos os registros?")) {
+        document.getElementById("tabelaPonto").innerHTML = "";
+        document.getElementById("registrosTexto").value = "";
+      }
     }
 
     function gerarRelatorioPDF() {
@@ -276,42 +292,40 @@
       doc.save("relatorio_dias_remidos.pdf");
     }
 
-    async function salvarRegistros() {
-      const tabela = document.getElementById("tabelaPonto");
-      const linhas = tabela.getElementsByTagName("tr");
+    document.getElementById("formSalvarTodos").addEventListener("submit", function (e) {
+      let tabela = document.getElementById("tabelaPonto");
+      let linhas = tabela.getElementsByTagName("tr");
       let registros = [];
 
       for (let i = 0; i < linhas.length; i++) {
-        const colunas = linhas[i].getElementsByTagName("td");
-        registros.push({
-          data: colunas[0].innerText,
-          remetente: colunas[1].innerText,
-          entrada: colunas[2].innerText,
-          entrada_intervalo: colunas[3].innerText,
-          saida_intervalo: colunas[4].innerText,
-          saida: colunas[5].innerText
-        });
-      }
-
-      try {
-        const response = await fetch("/salvar_registros", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(registros)
-        });
-
-        if (response.ok) {
-          alert("Registros salvos com sucesso!");
-        } else {
-          const erro = await response.json();
-          alert("Erro ao salvar registros:\n" + JSON.stringify(erro.detail, null, 2));
+        let colunas = linhas[i].getElementsByTagName("td");
+        if (colunas.length > 0) {
+          registros.push({
+            data: colunas[0].innerText,
+            remetente: colunas[1].innerText,
+            entrada: colunas[2].innerText,
+            entrada_intervalo: colunas[3].innerText,
+            saida_intervalo: colunas[4].innerText,
+            saida: colunas[5].innerText
+          });
         }
-      } catch (e) {
-        alert("Erro ao se conectar com o servidor.");
       }
-    }
+
+      if (registros.length === 0) {
+        alert("Nenhum registro para salvar!");
+        e.preventDefault();
+        return false;
+      }
+
+      // Exibe o JSON formatado no textarea para o usuário visualizar antes de enviar
+      document.getElementById("registrosTexto").value = JSON.stringify(registros, null, 2);
+
+      // O formulário continua a enviar normalmente com os dados no campo textarea
+    });
   </script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
