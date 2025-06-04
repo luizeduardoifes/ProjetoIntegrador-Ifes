@@ -3,166 +3,190 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Batimento de Ponto</title>
+  <title>Batimento de Ponto - APAC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #eef2f3;
-      background-image: url('/static/apac.png');
-      background-size: 120% 120%;
-      background-position: center;
-      background-repeat: no-repeat;
-      margin: 0;
-      padding: 0;
-    }
-
-    .navbar {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 1000;
-    }
-
-    .navbar-custom {
-      background-color: #0056b3;
-    }
-
-    .nav-link {
-      color: white !important;
-    }
-
-    .nav-link:hover {
-      text-decoration: underline;
-    }
-
-    .navbar-brand {
-      font-weight: bold;
-    }
-
-    .main-container {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      flex-direction: column;
-      padding: 20px;
-      margin-top: 100px;
-    }
-
-    .container {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      width: 100%;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    h2 {
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    input,
-    select {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.3s;
-      margin-top: 10px;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    table {
-      width: 100%;
-      margin-top: 20px;
-      border-collapse: collapse;
-      background: white;
-    }
-
-    th,
-    td {
-      padding: 10px;
-      text-align: center;
-      border: 1px solid #ddd;
-    }
-
-    th {
-      background-color: #007bff;
-      color: white;
-    }
-
-    tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
-
-    html,
-    body {
-      height: 100%;
-    }
-  </style>
 </head>
 
-<body>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #eef2f3;
+    background-image: url('/static/apac.png');
+    background-size: 120% 120%;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+  }
 
-  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+  .navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: #0056b3;
+    padding: 10px 20px;
+  }
+
+  .navbar-brand {
+    font-weight: bold;
+    color: white !important;
+  }
+
+  .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  }
+
+  .nav-link {
+    color: white !important;
+    margin-left: 10px;
+  }
+
+  .nav-link:hover {
+    text-decoration: underline;
+    color: #cce5ff !important;
+  }
+
+  .main-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 20px;
+    margin-top: 100px;
+  }
+
+  .container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  h2 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  input,
+  select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+
+  button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background: white;
+  }
+
+  th,
+  td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #007bff;
+    color: white;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  textarea#registrosTexto {
+    font-family: monospace;
+  }
+</style>
+
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Batimento de Ponto</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="/inicial">Início</a></li>
-          <li class="nav-item"><a class="nav-link" href="/relatorio">Geração de Relatórios</a></li>
-          <li class="nav-item"><a class="nav-link" href="/cadastro">Cadastro de Remetentes</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="/inicial">Início</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/cadastro">Cadastro de Remetentes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/relatorio">Relatórios</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/consulta">Consultas de dados</a>
+          </li>
         </ul>
       </div>
     </div>
   </nav>
 
+  <!-- CONTEÚDO PRINCIPAL -->
   <div class="main-container">
     <div class="container">
       <h2>Batimento de Ponto</h2>
-      <form onsubmit="return registrarPonto(event)" id="formRegistro"></form>
-      <input type="date" id="dataRegistro" required />
 
-      <select id="remetenteSelect" required>
-        <option value="" disabled selected hidden>Selecione um remetente</option>
-        {% for consulta in consultas %}
-        <option value="{{ consulta.remetente }}">{{ consulta.remetente }}</option>
-        {% endfor %}
-      </select>
+      <form onsubmit="return registrarPonto(event)" id="formRegistro">
+        <input type="date" id="dataRegistro" name="data" required />
+        <select id="remetenteSelect" name="remetente" required>
+          <option value="" disabled selected hidden>Selecione um remetente</option>
+          {% for consulta in consultas %}
+          <option value="{{ consulta.remetente }}">{{ consulta.remetente }}</option>
+          {% endfor %}
+        </select>
 
-      <select id="tipoEntrada" name="tipo" required>
-        <option value="entrada">Horário de Entrada</option>
-        <option value="entrada_intervalo">Entrada Intervalo</option>
-        <option value="saida_intervalo">Saída Intervalo</option>
-        <option value="saida">Horário de Saída</option>
-      </select>
+        <select id="tipoEntrada" name="tipo" required>
+          <option value="entrada">Horário de Entrada</option>
+          <option value="entrada_intervalo">Entrada Intervalo</option>
+          <option value="saida_intervalo">Saída Intervalo</option>
+          <option value="saida">Horário de Saída</option>
+        </select>
 
-      <button type="submit">Registrar Ponto</button>
+        <button type="submit">Registrar Ponto</button>
       </form>
 
       <!-- Formulário de salvar dados ajustado -->
