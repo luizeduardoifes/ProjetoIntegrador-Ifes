@@ -10,3 +10,4 @@ class Remetente:
     tempo_sentenca: str
     cela: str
     comportamento: str
+    
