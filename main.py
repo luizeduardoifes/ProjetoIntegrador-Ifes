@@ -15,6 +15,7 @@ from sqlalchemy.orm import Session
 import repo.remetente_repo
 from datetime import datetime
 import repo.registro_ponto_repo
+from pdf import *
 
 criar_tabela_encarregado()
 repo.remetente_repo.criar_tabela_remetente()
@@ -76,6 +77,9 @@ def salvar_todos_registros(registros: str = Form(...)):
             
             # Insere ou atualiza o registro no banco de dados
             registro = repo.registro_ponto_repo.inserir_registro_ponto(registro_ponto)
+            inserir_dados_ponto()
+            
+            
 
         return RedirectResponse(url="/ponto", status_code=303)
             
@@ -132,8 +136,21 @@ def cadastrar_remetente(
         )
 
 @app.get("/relatorio", response_class=HTMLResponse)
-async def relatorio(request: Request):
-    return templates.TemplateResponse("relatorio.html", {"request": request})
+async def index(request: Request):
+    files = os.listdir(PDF_DIR)
+    links = [f"/static/pdfs/{f}" for f in files]
+    return templates.TemplateResponse("relatorio.html", {"request": request, "pdf_links": links})
+
+@app.post("/limpar_pdfs")
+async def limpar_pdfs():
+    """Limpa todos os PDFs do diretório."""
+    files = os.listdir(PDF_DIR)
+    for file in files:
+        file_path = os.path.join(PDF_DIR, file)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+    return RedirectResponse(url="/relatorio", status_code=303)
+
 
 @app.get("/consulta", response_class=HTMLResponse)
 async def consulta_get(request: Request):

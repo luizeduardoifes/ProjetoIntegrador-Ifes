@@ -131,10 +131,16 @@
         <div class="pdf-list mt-5">
             <h5>Arquivos Enviados:</h5>
             <div id="pdfLinks">
-                <!-- Exemplo estático (em produção isso viria do back-end) -->
-                <a href="/uploads/ponto_abril.pdf" target="_blank">ponto_abril.pdf</a>
-                <a href="/uploads/ponto_maio.pdf" target="_blank">ponto_maio.pdf</a>
+                <ul>
+                    {% for link in pdf_links %}
+                    <li><a href="{{ link }}" target="_blank">{{ link.split('/')[-1] }}</a></li>
+                    {% endfor %}
+                </ul>
             </div>
+            <form method="POST" action="/limpar_pdfs"
+                onsubmit="return confirm('Tem certeza que deseja apagar todos os PDFs?');">
+                <button type="submit" class="btn btn-danger w-100 mt-3">Limpar Relatórios</button>
+            </form>
         </div>
     </div>
 

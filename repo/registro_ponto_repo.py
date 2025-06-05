@@ -40,13 +40,14 @@ def excluir_registro_ponto(id: int) -> bool:
     conexao.close()
     return (cursor.rowcount > 0)
 
-def listar_registros_ponto() -> list[RegistroPonto]:
-    """Lista todos os registros de ponto do banco de dados."""
+def obter_registros_ponto_por_pagina(limite:int, offset:int) -> list[RegistroPonto]:
+    """Obtém registros de ponto com paginação."""
     conexao = obter_conexao()
     cursor = conexao.cursor()
-    cursor.execute(GET_REGISTRO_PONTO_BY_PAGE, (1000, 0))
+    cursor.execute(GET_REGISTRO_PONTO_BY_PAGE, (limite, offset))
     resultados = cursor.fetchall()
     conexao.close()
+    
     return [RegistroPonto(
         id=resultado[0],
         data=resultado[1],
@@ -56,6 +57,7 @@ def listar_registros_ponto() -> list[RegistroPonto]:
         saida_intervalo=resultado[5],
         saida=resultado[6]
     ) for resultado in resultados]
+    
     
 def obter_registro_ponto_por_id(id: int) -> RegistroPonto:
     """Obtém um registro de ponto pelo ID."""
