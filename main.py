@@ -1,7 +1,7 @@
 import json
 from typing import List
 from fastapi.staticfiles import StaticFiles
-from fastapi import Depends, FastAPI, Form, Request
+from fastapi import Depends, FastAPI, Form, HTTPException, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from referencing import Registry
@@ -144,58 +144,23 @@ async def consulta_get(request: Request):
         "modo_edicao": None
     })
 
-@app.post("/formeditar", response_class=HTMLResponse)
-async def editar_remetente(
-    request: Request,
+@app.post("/atualizar")
+async def atualizar_remetente(
     id: int = Form(...),
     remetente: str = Form(...),
     data_nascimento: str = Form(...),
     crime: str = Form(...),
-    tempo_sentenca: int = Form(...),
+    tempo_sentenca: str = Form(...),
     cela: str = Form(...),
-    comportamento: str = Form(...)
+    comportamento: str = Form(...),
 ):
-    try:
-        # Converte a string para data no formato yyyy-mm-dd
-        data_formatada = datetime.strptime(data_nascimento, "%Y-%m-%d").date()
+    # Crie seu objeto remetente com esses dados
+    # Exemplo: remetente_obj = Remetente(id=id, remetente=remetente, ...)
 
-        # Cria o objeto remetente
-        remetente_obj = Remetente(
-            id=id,
-            remetente=remetente,
-            data_nascimento=data_formatada,
-            crime=crime,
-            tempo_sentenca=tempo_sentenca,
-            cela=cela,
-            comportamento=comportamento
-        )
+    # Atualize no banco aqui
+    print(f"Atualizando remetente {id}: {remetente}, {data_nascimento}, {crime}, {tempo_sentenca}, {cela}, {comportamento}")
 
-        # Atualiza no banco
-        repo.remetente_repo.atualizar_remetente(remetente_obj)
-
-        # Redireciona para a página de consulta
-        return templates.TemplateResponse("consulta.html", {
-            "request": request,
-            "sucesso": "Remetente editado com sucesso!",
-            "consultas": repo.remetente_repo.atualizar_remetente(remetente_obj),
-            "modo_edicao": None
-        })
-
-    except Exception as e:
-        return templates.TemplateResponse(
-            "consulta.html",
-            {
-                "request": request,
-                "erro": f"Erro ao editar: {str(e)}"
-            }
-        )
-
-
-
-
-
-
-
+    return RedirectResponse(url="/consulta", status_code=303)
 
 
 if __name__ == "__main__":
