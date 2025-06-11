@@ -81,12 +81,6 @@ def salvar_todos_registros(registros: str = Form(...)):
         return RedirectResponse(url="/ponto", status_code=303)
             
 
-
-
-
-
-
-
 @app.get("/cadastro", response_class=HTMLResponse)
 async def cadastro(request: Request):
     
