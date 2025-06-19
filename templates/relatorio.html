@@ -27,36 +27,49 @@
             margin: 0;
         }
 
-        body {
-            background-image: url('/static/apac.png');
-            background-size: 120% 120%;
-            background-position: center;
-            background-repeat: no-repeat;
-            padding-top: 70px;
-            /* Garante espaço para navbar fixa */
-        }
+
 
         .navbar {
             position: fixed;
             top: 0;
             width: 100%;
-            z-index: 1000;
+            z-index: 1001;
         }
 
         .navbar-custom {
             background-color: #0056b3;
         }
 
-        .nav-link {
-            color: white !important;
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #343a40;
+            position: fixed;
+            top: 56px;
+            left: -250px;
+            /* Escondida inicialmente */
+            transition: left 0.3s ease;
+            z-index: 1000;
         }
 
-        .nav-link:hover {
-            text-decoration: underline;
+        .sidebar.show {
+            left: 0;
         }
 
-        .navbar-brand {
-            font-weight: bold;
+        .sidebar a {
+            color: #ffffff;
+            padding: 15px 20px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #495057;
+        }
+
+        #sidebarToggle {
+            width: 40px;
         }
 
         .main-container {
@@ -92,29 +105,25 @@
 
 <body>
 
-    <!-- Navbar -->
+    <!-- Navbar superior com botão hamburguer -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Geração de Relatórios</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Alternar navegação">
-                <span class="navbar-toggler-icon"></span>
+            <button class="btn btn-light me-3" id="sidebarToggle">
+                &#9776; <!-- Ícone hamburguer -->
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/inicial">Início</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/ponto">Batimento de Ponto </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/cadastro">Cadastro de Remetentes</a>
-                    </li>
-                </ul>
-            </div>
+            <a class="navbar-brand" href="#">Relatórios</a>
         </div>
     </nav>
+
+    <!-- Sidebar lateral -->
+    <div class="sidebar" id="sidebar">
+        <a href="/inicial" class="active">inicio</a>
+        <a href="/ponto">Batimento de Ponto</a>
+        <a href="/relatorio">Geração de Relatórios</a>
+        <a href="/cadastro">Cadastro de Remetentes</a>
+        <a href="/consulta">Consulta de Dados</a>
+        <a href="/">Sair</a>
+    </div>
 
     <!-- Upload Container -->
     <div class="main-container">
@@ -147,6 +156,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
         crossorigin="anonymous"></script>
+
+    <script>
+        const toggleButton = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+
+        toggleButton.addEventListener('click', () => {
+            sidebar.classList.toggle('show');
+            content.classList.toggle('shifted');
+        });
+    </script>
 </body>
 
 </html>
