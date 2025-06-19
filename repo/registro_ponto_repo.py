@@ -15,7 +15,7 @@ def inserir_registro_ponto(registro: RegistroPonto) -> RegistroPonto:
     conexao = obter_conexao()
     cursor = conexao.cursor()
     cursor.execute(INSERT_REGISTRO_PONTO, 
-        (registro.data, registro.remetente, registro.entrada, registro.entrada_intervalo, registro.saida_intervalo, registro.saida))
+        (registro.data, registro.remetente, registro.entrada, registro.entrada_intervalo, registro.saida_intervalo, registro.saida, registro.dias_remidos))
     registro.id = cursor.lastrowid
     conexao.commit()
     conexao.close()
@@ -26,7 +26,7 @@ def atualizar_registro_ponto(registro: RegistroPonto) -> bool:
     conexao = obter_conexao()
     cursor = conexao.cursor()
     cursor.execute(UPDATE_REGISTRO_PONTO, 
-        (registro.data, registro.remetente, registro.entrada, registro.entrada_intervalo, registro.saida_intervalo, registro.saida, registro.id))
+        (registro.data, registro.remetente, registro.entrada, registro.entrada_intervalo, registro.saida_intervalo, registro.saida,registro.dias_remidos, registro.id))
     conexao.commit()
     conexao.close()
     return (cursor.rowcount > 0)
@@ -55,7 +55,8 @@ def obter_registros_ponto_por_pagina(limite:int, offset:int) -> list[RegistroPon
         entrada=resultado[3],
         entrada_intervalo=resultado[4],
         saida_intervalo=resultado[5],
-        saida=resultado[6]
+        saida=resultado[6],
+        dias_remidos=resultado[7]
     ) for resultado in resultados]
     
     
@@ -75,7 +76,8 @@ def obter_registro_ponto_por_id(id: int) -> RegistroPonto:
             entrada=resultado[3],
             entrada_intervalo=resultado[4],
             saida_intervalo=resultado[5],
-            saida=resultado[6]
+            saida=resultado[6],
+            dias_remidos=resultado[7]
         )
     return None
 
@@ -94,5 +96,6 @@ def obter_registros_por_remetente(remetente: str) -> list[RegistroPonto]:
         entrada=resultado[3],
         entrada_intervalo=resultado[4],
         saida_intervalo=resultado[5],
-        saida=resultado[6]
+        saida=resultado[6],
+        dias_remidos=resultado[7]
     ) for resultado in resultados] 

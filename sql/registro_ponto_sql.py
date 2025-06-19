@@ -6,18 +6,19 @@ CREATE TABLE IF NOT EXISTS registro_ponto (
     entrada TIME NOT NULL,
     entrada_intervalo TIME NOT NULL,
     saida_intervalo TIME NOT NULL,
-    saida TIME NOT NULL
+    saida TIME NOT NULL,
+    dias_remidos REAL NOT NULL
 );
 """
 
 INSERT_REGISTRO_PONTO = """
-INSERT INTO registro_ponto (data, remetente, entrada, entrada_intervalo, saida_intervalo, saida)
-VALUES (?, ?, ?, ?, ?, ?);
+INSERT INTO registro_ponto (data, remetente, entrada, entrada_intervalo, saida_intervalo, saida, dias_remidos)
+VALUES (?, ?, ?, ?, ?, ?, ?);
 """
 
 UPDATE_REGISTRO_PONTO = """
 UPDATE registro_ponto
-SET data = ? remetente = ? entrada = ?, entrada_intervalo = ?, saida_intervalo = ?, saida = ?
+SET data = ? remetente = ? entrada = ?, entrada_intervalo = ?, saida_intervalo = ?, saida = ?, dias_remidos = ?
 WHERE id = ?;
 """
 
@@ -27,20 +28,20 @@ WHERE id = ?;
 """
 
 GET_REGISTRO_PONTO_BY_ID = """
-SELECT id, data, remetente, entrada, entrada_intervalo, saida_intervalo, saida
+SELECT id, data, remetente, entrada, entrada_intervalo, saida_intervalo, saida, dias_remidos
 FROM registro_ponto
 WHERE id = ?;
 """
 
 GET_REGISTRO_PONTO_BY_PAGE = """
-SELECT id, data, remetente, entrada, entrada_intervalo, saida_intervalo, saida
+SELECT id, data, remetente, entrada, entrada_intervalo, saida_intervalo, saida, dias_remidos
 FROM registro_ponto
 ORDER BY data DESC
 LIMIT ? OFFSET ?;
 """
 
 GET_REGISTRO_PONTO_BY_REMETENTE = """
-SELECT id, data, remetente, entrada, entrada_intervalo, saida_intervalo, saida
+SELECT id, data, remetente, entrada, entrada_intervalo, saida_intervalo, saida, dias_remidos
 FROM registro_ponto
 WHERE remetente = ?
 ORDER BY data DESC

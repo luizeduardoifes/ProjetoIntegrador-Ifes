@@ -12,6 +12,7 @@ os.makedirs(PDF_DIR, exist_ok=True)
 def inserir_dados_ponto():
     obter_registros = registro_ponto_repo.obter_registros_ponto_por_pagina(12, 0)
     
+    
     for registro in obter_registros:
         pdf = FPDF()
         pdf.add_page()
@@ -24,6 +25,7 @@ def inserir_dados_ponto():
         pdf.cell(200, 10, txt=f"Entrada Intervalo: {registro.entrada_intervalo}", ln=True)
         pdf.cell(200, 10, txt=f"Saída Intervalo: {registro.saida_intervalo}", ln=True)
         pdf.cell(200, 10, txt=f"Saída: {registro.saida}", ln=True)
+        pdf.cell(200, 10, txt=f"Dias Remidos: {registro.dias_remidos}", ln=True)
 
         pdf_path = os.path.join(PDF_DIR, f"registro_{registro.id}.pdf")
         pdf.output(pdf_path)

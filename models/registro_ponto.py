@@ -1,4 +1,3 @@
-
 from dataclasses import dataclass
 from datetime import date, time
 
@@ -12,3 +11,4 @@ class RegistroPonto:
     entrada_intervalo: time
     saida_intervalo: time
     saida: time
+    dias_remidos: float 
