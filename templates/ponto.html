@@ -192,7 +192,9 @@
       </form>
 
       <button type="button" onclick="limparTabela()">Limpar Registros</button>
-      <button type="submit" name="acao" value="PDF">Salvar em PDF</button>
+      <form method="POST" action="/salvarpdf">
+        <button type="submit" name="acao" value="PDF">Gerar Relatório em PDF</button>
+      </form>
 
       <table>
         <thead>

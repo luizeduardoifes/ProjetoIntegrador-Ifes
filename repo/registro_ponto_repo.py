@@ -31,11 +31,11 @@ def atualizar_registro_ponto(registro: RegistroPonto) -> bool:
     conexao.close()
     return (cursor.rowcount > 0)
 
-def excluir_registro_ponto(id: int) -> bool:
-    """Exclui um registro de ponto do banco de dados pelo ID."""
+def excluir_registro_ponto() -> bool:
+    """Exclui todos os registros de ponto do banco de dados."""
     conexao = obter_conexao()
     cursor = conexao.cursor()
-    cursor.execute(DELETE_REGISTRO_PONTO, (id,))
+    cursor.execute(DELETE_REGISTRO_PONTO)
     conexao.commit()
     conexao.close()
     return (cursor.rowcount > 0)

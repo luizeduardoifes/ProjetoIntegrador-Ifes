@@ -99,11 +99,28 @@ def salvar_todos_registros(registros: str = Form(...)):
             
             # Insere ou atualiza o registro no banco de dados
             registro = repo.registro_ponto_repo.inserir_registro_ponto(registro_ponto)
-            inserir_dados_ponto()
+            
             
             
 
         return RedirectResponse(url="/ponto", status_code=303)
+    
+@app.post("/salvarpdf")
+def salvar_pdf(request: Request):
+    try:
+        # Gera os PDFs com os registros de ponto
+        inserir_dados_ponto()
+        
+        # Retorna a página de relatório com os links dos PDFs
+        return RedirectResponse(url="/ponto", status_code=303)
+    except Exception as e:
+        return templates.TemplateResponse(
+            "ponto.html",
+            {
+                "request": request,
+                "erro": f"Erro ao gerar PDF: {str(e)}"
+            }
+        )
             
 
 @app.get("/cadastro", response_class=HTMLResponse)
@@ -165,6 +182,7 @@ async def limpar_pdfs():
         file_path = os.path.join(PDF_DIR, file)
         if os.path.isfile(file_path):
             os.remove(file_path)
+        repo.registro_ponto_repo.excluir_registro_ponto()
     return RedirectResponse(url="/relatorio", status_code=303)
 
 

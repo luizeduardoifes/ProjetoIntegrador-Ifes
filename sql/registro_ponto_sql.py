@@ -23,8 +23,7 @@ WHERE id = ?;
 """
 
 DELETE_REGISTRO_PONTO = """
-DELETE FROM registro_ponto
-WHERE id = ?;
+DELETE FROM registro_ponto;
 """
 
 GET_REGISTRO_PONTO_BY_ID = """
