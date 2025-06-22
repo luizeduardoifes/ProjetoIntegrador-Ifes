@@ -1,10 +1,8 @@
 import json
-from typing import List
 from fastapi.staticfiles import StaticFiles
-from fastapi import Depends, FastAPI, Form, HTTPException, Request
+from fastapi import Depends, FastAPI, Form, Request
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
-from referencing import Registry
+from fastapi.responses import HTMLResponse, RedirectResponse
 from models.get_db import get_db
 from models.base import Usuario
 from models.registro_ponto import RegistroPonto
