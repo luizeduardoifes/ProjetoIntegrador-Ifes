@@ -204,10 +204,17 @@ async def atualizar_remetente(
     comportamento: str = Form(...),
 ):
     # Crie seu objeto remetente com esses dados
-    # Exemplo: remetente_obj = Remetente(id=id, remetente=remetente, ...)
-
-    # Atualize no banco aqui
-    print(f"Atualizando remetente {id}: {remetente}, {data_nascimento}, {crime}, {tempo_sentenca}, {cela}, {comportamento}")
+    remetente_obj = Remetente(
+        id=id,
+        remetente=remetente,
+        data_nascimento=datetime.strptime(data_nascimento, "%Y-%m-%d").date(),
+        crime=crime,
+        tempo_sentenca=tempo_sentenca,
+        cela=cela,
+        comportamento=comportamento
+    )
+   
+    repo.remetente_repo.atualizar_remetente(remetente_obj)
 
     return RedirectResponse(url="/consulta", status_code=303)
 

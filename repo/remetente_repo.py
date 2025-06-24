@@ -21,12 +21,12 @@ def inserir_remetente(remetente: Remetente) -> Remetente:
     conexao.close()
     return remetente
 
-def atualizar_remetente(self, remetente: Remetente) -> bool:
+def atualizar_remetente(remetente: Remetente) -> bool:
     """Atualiza um rementente existente no banco de dados."""
     conexao = obter_conexao()
     cursor = conexao.cursor()
     cursor.execute(UPDATE_REMETENTES, 
-        (remetente.remetente, remetente.data_nascimento, remetente.crime, remetente.tempo_sentenca, remetente.cela, remetente.comportamento, remetente.id))
+        (remetente.id,remetente.remetente, remetente.data_nascimento, remetente.crime, remetente.tempo_sentenca, remetente.cela, remetente.comportamento))
     conexao.commit()
     conexao.close()
     return (cursor.rowcount > 0)
