@@ -3,7 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi import Depends, FastAPI, Form, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
-from pydantic import BaseModel
+from calculo_horas import calcular_dias_remidos
 from models.get_db import get_db
 from models.base import Usuario
 from models.registro_ponto import RegistroPonto
@@ -49,23 +49,6 @@ async def inicial(request: Request):
 async def ponto(request: Request):
     consultas = repo.remetente_repo.listar_remetentes()
     return templates.TemplateResponse("ponto.html", {"request": request, "consultas": consultas})
-
-def calcular_dias_remidos(entrada, entrada_intervalo, saida_intervalo, saida, jornada_padrao=8):
-        formato = "%H:%M"
-        entrada = datetime.strptime(entrada, formato)
-        entrada_intervalo = datetime.strptime(entrada_intervalo, formato)
-        saida_intervalo = datetime.strptime(saida_intervalo, formato)
-        saida = datetime.strptime(saida, formato)
-
-        periodo1 = entrada_intervalo - entrada
-        periodo2 = saida - saida_intervalo
-
-        total_trabalhado = periodo1 + periodo2
-        total_horas = total_trabalhado.total_seconds() / 3600
-
-        dias_remidos = total_horas / jornada_padrao
-        return round(dias_remidos, 2)
-
 
 @app.post("/salvar_todos")
 def salvar_todos_registros(registros: str = Form(...)):

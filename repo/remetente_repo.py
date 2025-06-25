@@ -1,5 +1,4 @@
 from data.database import obter_conexao
-from models import remetente
 from sql.remetente_sql import *
 from models.remetente import Remetente
 
