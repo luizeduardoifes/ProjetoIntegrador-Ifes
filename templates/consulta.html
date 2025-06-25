@@ -25,7 +25,6 @@
             position: fixed;
             top: 56px;
             left: -250px;
-            /* Escondida inicialmente */
             transition: left 0.3s ease;
             z-index: 1000;
         }
@@ -53,8 +52,7 @@
         .centered-content {
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: calc(100vh - 56px);
+            align-items: flex-start;
             padding: 1rem;
         }
 
@@ -82,23 +80,27 @@
         .form-input {
             display: none;
         }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
     </style>
 </head>
 
 <body>
-    <!-- Navbar superior com botão hamburguer -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container-fluid">
-            <button class="btn btn-light me-3" id="sidebarToggle">
-                &#9776; <!-- Ícone hamburguer -->
-            </button>
+            <button class="btn btn-light me-3" id="sidebarToggle">&#9776;</button>
             <a class="navbar-brand" href="#">Consulta de Dados</a>
         </div>
     </nav>
 
-    <!-- Sidebar lateral -->
+    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-        <a href="/inicial" class="active">inicio</a>
+        <a href="/inicial" class="active">Início</a>
         <a href="/ponto">Batimento de Ponto</a>
         <a href="/relatorio">Geração de Relatórios</a>
         <a href="/cadastro">Cadastro de Remetentes</a>
@@ -106,80 +108,89 @@
         <a href="/">Sair</a>
     </div>
 
+    <main class="container py-5" style="margin-top: 80px;">
+        <!-- Formulário de exclusão -->
+        <div class="card p-4 mb-5">
+            <h5 class="mb-3">Excluir Remetente por ID</h5>
+            <form method="post" action="/excluir" onsubmit="return confirm('Deseja realmente excluir este ID?');"
+                class="d-flex gap-2 flex-wrap">
+                <input type="number" name="id" class="form-control" placeholder="Digite o ID para excluir" required
+                    style="max-width: 200px;">
+                <button type="submit" class="btn btn-danger">Excluir</button>
+            </form>
+        </div>
 
-    <div class="centered-content">
-        <div class="card p-4">
-            <h5 class="card-title mb-4">Lista de Remetentes</h5>
-            <div class="table-responsive">
-                <table class="table table-striped align-middle">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Remetente</th>
-                            <th>Data de Nascimento</th>
-                            <th>Crime</th>
-                            <th>Tempo de Sentença</th>
-                            <th>Cela</th>
-                            <th>Comportamento</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for consulta in consultas %}
-                        <tr>
-                            <form method="post" action="/atualizar">
-                                <td>{{ consulta.id }}
-                                    <input type="hidden" name="id" value="{{ consulta.id }}">
-                                </td>
-
-                                <td>
-                                    <span class="text-span">{{ consulta.remetente }}</span>
-                                    <input type="text" name="remetente" class="form-control form-input"
-                                        value="{{ consulta.remetente }}">
-                                </td>
-                                <td>
-                                    <span class="text-span">{{ consulta.data_nascimento }}</span>
-                                    <input type="text" name="data_nascimento" class="form-control form-input"
-                                        value="{{ consulta.data_nascimento }}">
-                                </td>
-                                <td>
-                                    <span class="text-span">{{ consulta.crime }}</span>
-                                    <input type="text" name="crime" class="form-control form-input"
-                                        value="{{ consulta.crime }}">
-                                </td>
-                                <td>
-                                    <span class="text-span">{{ consulta.tempo_sentenca }}</span>
-                                    <input type="text" name="tempo_sentenca" class="form-control form-input"
-                                        value="{{ consulta.tempo_sentenca }}">
-                                </td>
-                                <td>
-                                    <span class="text-span">{{ consulta.cela }}</span>
-                                    <input type="text" name="cela" class="form-control form-input"
-                                        value="{{ consulta.cela }}">
-                                </td>
-                                <td>
-                                    <span class="text-span">{{ consulta.comportamento }}</span>
-                                    <input type="text" name="comportamento" class="form-control form-input"
-                                        value="{{ consulta.comportamento }}">
-                                </td>
-
-                                <td class="acoes">
-                                    <button type="button" class="btn btn-sm btn-primary btn-editar">Editar</button>
-                                    <button type="submit" class="btn btn-sm btn-success btn-salvar"
-                                        style="display:none;">Salvar</button>
-
-                                    <form method="post" action="/excluir/{{ consulta.id }}" style="display:inline;">
-                                        <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
-                                    </form>
-                                </td>
-                            </form>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <!-- Lista de Remetentes -->
+        <div class="centered-content">
+            <div class="card p-4">
+                <h5 class="card-title mb-4">Lista de Remetentes</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Remetente</th>
+                                <th>Data de Nascimento</th>
+                                <th>Crime</th>
+                                <th>Tempo de Sentença</th>
+                                <th>Cela</th>
+                                <th>Comportamento</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for consulta in consultas %}
+                            <tr>
+                                <form method="post" action="/atualizar">
+                                    <td>{{ consulta.id }}
+                                        <input type="hidden" name="id" value="{{ consulta.id }}">
+                                    </td>
+                                    <td>
+                                        <span class="text-span">{{ consulta.remetente }}</span>
+                                        <input type="text" name="remetente" class="form-control form-input"
+                                            value="{{ consulta.remetente }}">
+                                    </td>
+                                    <td>
+                                        <span class="text-span">{{ consulta.data_nascimento }}</span>
+                                        <input type="text" name="data_nascimento" class="form-control form-input"
+                                            value="{{ consulta.data_nascimento }}">
+                                    </td>
+                                    <td>
+                                        <span class="text-span">{{ consulta.crime }}</span>
+                                        <input type="text" name="crime" class="form-control form-input"
+                                            value="{{ consulta.crime }}">
+                                    </td>
+                                    <td>
+                                        <span class="text-span">{{ consulta.tempo_sentenca }}</span>
+                                        <input type="text" name="tempo_sentenca" class="form-control form-input"
+                                            value="{{ consulta.tempo_sentenca }}">
+                                    </td>
+                                    <td>
+                                        <span class="text-span">{{ consulta.cela }}</span>
+                                        <input type="text" name="cela" class="form-control form-input"
+                                            value="{{ consulta.cela }}">
+                                    </td>
+                                    <td>
+                                        <span class="text-span">{{ consulta.comportamento }}</span>
+                                        <input type="text" name="comportamento" class="form-control form-input"
+                                            value="{{ consulta.comportamento }}">
+                                    </td>
+                                    <td class="acoes">
+                                        <button type="button" class="btn btn-sm btn-primary btn-editar">Editar</button>
+                                        <button type="submit" class="btn btn-sm btn-success btn-salvar"
+                                            style="display:none;">Salvar</button>
+                                    </td>
+                                </form>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
+
+
 
     <script>
         document.querySelectorAll(".btn-editar").forEach(button => {
@@ -191,13 +202,11 @@
                 row.querySelector(".btn-salvar").style.display = "inline-block";
             });
         });
+
         const toggleButton = document.getElementById('sidebarToggle');
         const sidebar = document.getElementById('sidebar');
-        const content = document.getElementById('content');
-
         toggleButton.addEventListener('click', () => {
             sidebar.classList.toggle('show');
-            content.classList.toggle('shifted');
         });
     </script>
 </body>

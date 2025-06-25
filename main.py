@@ -3,6 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi import Depends, FastAPI, Form, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
+from pydantic import BaseModel
 from models.get_db import get_db
 from models.base import Usuario
 from models.registro_ponto import RegistroPonto
@@ -218,6 +219,10 @@ async def atualizar_remetente(
 
     return RedirectResponse(url="/consulta", status_code=303)
 
+@app.post("/excluir")
+async def excluir_remetente(id: int = Form(...)):
+    repo.remetente_repo.excluir_remetente(id)
+    return RedirectResponse(url="/consulta", status_code=303)
 
 if __name__ == "__main__":
     import uvicorn

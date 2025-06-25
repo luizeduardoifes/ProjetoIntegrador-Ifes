@@ -1,4 +1,5 @@
 from data.database import obter_conexao
+from models import remetente
 from sql.remetente_sql import *
 from models.remetente import Remetente
 
@@ -32,7 +33,6 @@ def atualizar_remetente(remetente: Remetente) -> bool:
     return (cursor.rowcount > 0)
 
 def excluir_remetente(id: int) -> bool:
-    """Exclui um rementente do banco de dados pelo ID."""
     conexao = obter_conexao()
     cursor = conexao.cursor()
     cursor.execute(DELETE_REMETENTES, (id,))
