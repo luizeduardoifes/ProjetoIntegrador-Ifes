@@ -26,7 +26,7 @@ def atualizar_remetente(remetente: Remetente) -> bool:
     conexao = obter_conexao()
     cursor = conexao.cursor()
     cursor.execute(UPDATE_REMETENTES, 
-        (remetente.id,remetente.remetente, remetente.data_nascimento, remetente.crime, remetente.tempo_sentenca, remetente.cela, remetente.comportamento))
+        (remetente.remetente, remetente.data_nascimento, remetente.crime, remetente.tempo_sentenca, remetente.cela, remetente.comportamento,remetente.id))
     conexao.commit()
     conexao.close()
     return (cursor.rowcount > 0)

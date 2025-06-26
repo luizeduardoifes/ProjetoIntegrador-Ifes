@@ -19,8 +19,14 @@ VALUES (?, ?, ?, ?, ?, ?);
 
 # Constante para atualizar um remetente existente
 UPDATE_REMETENTES = """
-UPDATE Remetentes 
-SET id = ?, remetente = ?, data_nascimento = ?, crime = ?, tempo_sentenca = ?, cela = ?, comportamento = ?;
+UPDATE Remetentes
+SET remetente = ?, 
+    data_nascimento = ?, 
+    crime = ?, 
+    tempo_sentenca = ?, 
+    cela = ?, 
+    comportamento = ?
+WHERE id = ?;
 """
 
 
