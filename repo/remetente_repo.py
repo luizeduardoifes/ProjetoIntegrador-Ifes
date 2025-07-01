@@ -92,3 +92,22 @@ def obter_remetentes_por_pagina(limite: int, offset: int) -> list[Remetente]:
         cela=resultado[5],
         comportamento=resultado[6]
     ) for resultado in resultados]
+    
+def obter_remetente_por_nome(nome: str) -> Remetente:
+    """Obtém um remetente pelo nome."""
+    conexao = obter_conexao()
+    cursor = conexao.cursor()
+    cursor.execute(GET_REMETENTES_BY_NAME, (nome,))
+    resultado = cursor.fetchone()
+    conexao.close()
+    if resultado:
+        return Remetente(
+            id=resultado[0],
+            remetente=resultado[1],
+            data_nascimento=resultado[2],
+            crime=resultado[3],
+            tempo_sentenca=resultado[4],
+            cela=resultado[5],
+            comportamento=resultado[6]
+        )
+    return None

@@ -120,6 +120,16 @@ def cadastrar_remetente(
     cela: str = Form(...),
     comportamento: str = Form(...)
 ):
+    # Verifica se o remetente já existe
+    remetente_existente = repo.remetente_repo.obter_remetente_por_nome(remetente)
+    if remetente_existente:
+        return templates.TemplateResponse(
+            "cadastro.html",
+            {
+                "request": request,
+                "error": "Remetente já cadastrado!"
+            }
+        )
     try:
         # Converte a string para data no formato yyyy-mm-dd
         data_formatada = datetime.strptime(data_nascimento, "%Y-%m-%d").date()
@@ -134,11 +144,12 @@ def cadastrar_remetente(
             cela=cela,
             comportamento=comportamento
         )
-
-        # Insere no banco e recupera com ID
+        
+ 
+    # Insere no banco e recupera com ID
         remetente = repo.remetente_repo.inserir_remetente(remetente)
 
-        # Retorna o template com confirmação
+    # Retorna o template com confirmação
         return templates.TemplateResponse("cadastro.html",{"request": request,"sucesso": "remetente cadastrado com sucesso!","remetente": remetente})
 
     except Exception as e:

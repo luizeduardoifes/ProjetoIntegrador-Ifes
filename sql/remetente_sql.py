@@ -50,3 +50,9 @@ FROM Remetentes
 ORDER BY remetente ASC 
 LIMIT ? OFFSET ?;
 """
+
+GET_REMETENTES_BY_NAME = """
+SELECT id, remetente, data_nascimento, crime, tempo_sentenca, cela, comportamento
+FROM Remetentes
+WHERE remetente = ?;
+"""
