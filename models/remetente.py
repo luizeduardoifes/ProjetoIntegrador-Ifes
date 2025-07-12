@@ -6,7 +6,7 @@ class Remetente:
     id: int
     remetente: str
     data_nascimento: date
-    crime: str
+    artigo: int
     tempo_sentenca: str
     cela: str
     comportamento: str

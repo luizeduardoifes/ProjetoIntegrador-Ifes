@@ -15,7 +15,7 @@ def inserir_remetente(remetente: Remetente) -> Remetente:
     conexao = obter_conexao()
     cursor = conexao.cursor()
     cursor.execute(INSERT_REMETENTES, 
-        (remetente.remetente, remetente.data_nascimento, remetente.crime, remetente.tempo_sentenca, remetente.cela, remetente.comportamento))
+        (remetente.remetente, remetente.data_nascimento, remetente.artigo, remetente.tempo_sentenca, remetente.cela, remetente.comportamento))
     remetente.id = cursor.lastrowid
     conexao.commit()
     conexao.close()
@@ -26,7 +26,7 @@ def atualizar_remetente(remetente: Remetente) -> bool:
     conexao = obter_conexao()
     cursor = conexao.cursor()
     cursor.execute(UPDATE_REMETENTES, 
-        (remetente.remetente, remetente.data_nascimento, remetente.crime, remetente.tempo_sentenca, remetente.cela, remetente.comportamento,remetente.id))
+        (remetente.remetente, remetente.data_nascimento, remetente.artigo, remetente.tempo_sentenca, remetente.cela, remetente.comportamento,remetente.id))
     conexao.commit()
     conexao.close()
     return (cursor.rowcount > 0)
@@ -50,7 +50,7 @@ def listar_remetentes() -> list[Remetente]:
         id=resultado[0],
         remetente=resultado[1],   
         data_nascimento=resultado[2],
-        crime=resultado[3],
+        artigo=resultado[3],
         tempo_sentenca=resultado[4],
         cela=resultado[5],
         comportamento=resultado[6]
@@ -68,7 +68,7 @@ def obter_remetente_por_id(id: int) -> Remetente:
             id=resultado[0],
             remetente=resultado[1],
             data_nascimento=resultado[2],
-            crime=resultado[3],
+            artigo=resultado[3],
             tempo_sentenca=resultado[4],
             cela=resultado[5],
             comportamento=resultado[6]
@@ -87,7 +87,7 @@ def obter_remetentes_por_pagina(limite: int, offset: int) -> list[Remetente]:
         id=resultado[0],
         remetente=resultado[1],   
         data_nascimento=resultado[2],
-        crime=resultado[3],
+        artigo=resultado[3],
         tempo_sentenca=resultado[4],
         cela=resultado[5],
         comportamento=resultado[6]
@@ -105,7 +105,7 @@ def obter_remetente_por_nome(nome: str) -> Remetente:
             id=resultado[0],
             remetente=resultado[1],
             data_nascimento=resultado[2],
-            crime=resultado[3],
+            artigo=resultado[3],
             tempo_sentenca=resultado[4],
             cela=resultado[5],
             comportamento=resultado[6]

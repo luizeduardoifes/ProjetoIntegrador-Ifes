@@ -115,7 +115,7 @@ def cadastrar_remetente(
     request: Request,
     remetente: str = Form(...),
     data_nascimento: str = Form(...),
-    crime: str = Form(...),
+    artigo: str = Form(...),
     tempo_sentenca: int = Form(...),
     cela: str = Form(...),
     comportamento: str = Form(...)
@@ -139,7 +139,7 @@ def cadastrar_remetente(
             id=0,  # será atribuído após inserção
             remetente=remetente,
             data_nascimento=data_formatada,
-            crime=crime,
+            artigo=artigo,
             tempo_sentenca=tempo_sentenca,
             cela=cela,
             comportamento=comportamento
@@ -193,7 +193,7 @@ async def atualizar_remetente(
     id: int = Form(...),
     remetente: str = Form(...),
     data_nascimento: str = Form(...),
-    crime: str = Form(...),
+    artigo: str = Form(...),
     tempo_sentenca: str = Form(...),
     cela: str = Form(...),
     comportamento: str = Form(...),
@@ -203,7 +203,7 @@ async def atualizar_remetente(
         id=id,
         remetente=remetente,
         data_nascimento=datetime.strptime(data_nascimento, "%Y-%m-%d").date(),
-        crime=crime,
+        artigo=artigo,
         tempo_sentenca=tempo_sentenca,
         cela=cela,
         comportamento=comportamento
